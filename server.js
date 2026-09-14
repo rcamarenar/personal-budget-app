@@ -74,10 +74,10 @@ function writeTransactions(txs) {
   }
 }
 
-// Default Seed Data
+// Default Seed Data (Clean Production Initial State)
 function getDefaultData() {
   return {
-    salary: 2500,
+    salary: 0,
     currency: "S/.",
     categories: [
       {
@@ -85,44 +85,24 @@ function getDefaultData() {
         title: "GASTOS FIJOS",
         themeClass: "category-fijos",
         color: "#38bdf8",
-        items: [
-          { id: "item-1", name: "Renta", amount: 800, isAvoidable: false },
-          { id: "item-2", name: "Agua y luz", amount: 120, isAvoidable: false },
-          { id: "item-3", name: "Internet", amount: 60, isAvoidable: false },
-          { id: "item-4", name: "Celular", amount: 40, isAvoidable: false }
-        ]
+        items: []
       },
       {
         id: "cat-esenciales",
         title: "GASTOS ESENCIALES",
         themeClass: "category-esenciales",
         color: "#fbbf24",
-        items: [
-          { id: "item-5", name: "Alimentación", amount: 350, isAvoidable: false },
-          { id: "item-6", name: "Transporte", amount: 180, isAvoidable: false },
-          { id: "item-7", name: "Salud", amount: 100, isAvoidable: false }
-        ]
+        items: []
       },
       {
         id: "cat-plan",
         title: "PLANIFICACIÓN",
         themeClass: "category-plan",
         color: "#10b981",
-        items: [
-          { id: "item-8", name: "Fondo de emergencia", amount: 350, isAvoidable: false },
-          { id: "item-9", name: "Inversión", amount: 250, isPercentLinked: true, percentOfSalary: 10, isAvoidable: false },
-          { id: "item-10", name: "Ocio / imprevistos", amount: 250, isAvoidable: true }
-        ]
+        items: []
       }
     ],
-    history: [
-      { month: "Ene", totalSpent: 2500, avoidableSpent: 320 },
-      { month: "Feb", totalSpent: 2550, avoidableSpent: 300 },
-      { month: "Mar", totalSpent: 2480, avoidableSpent: 280 },
-      { month: "Abr", totalSpent: 2500, avoidableSpent: 260 },
-      { month: "May", totalSpent: 2520, avoidableSpent: 250 },
-      { month: "Jun", totalSpent: 2500, avoidableSpent: 250 }
-    ]
+    history: []
   };
 }
 

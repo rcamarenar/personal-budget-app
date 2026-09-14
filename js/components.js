@@ -28,19 +28,29 @@ function renderSalaryCard(state) {
   const isUnder = state.status === 'under';
   const isOver = state.status === 'over';
 
-  let statusBadgeClass = 'badge-balanced';
-  let statusText = '100% Asignado';
-  let fillClass = 'fill-exact';
+  let statusBadgeClass = 'badge-remaining';
+  let statusText = 'Ingresa tu sueldo';
+  let fillClass = 'fill-under';
 
-  if (isUnder) {
-    statusBadgeClass = 'badge-remaining';
-    statusText = `Resta: ${state.currency} ${formatMoney(state.remaining)}`;
-    fillClass = 'fill-under';
-  } else if (isOver) {
-    statusBadgeClass = 'badge-over';
-    statusText = `Excedido: ${state.currency} ${formatMoney(Math.abs(state.remaining))}`;
-    fillClass = 'fill-over';
+  if (state.salary > 0) {
+    if (isUnder) {
+      statusBadgeClass = 'badge-remaining';
+      statusText = `Resta: ${state.currency} ${formatMoney(state.remaining)}`;
+      fillClass = 'fill-under';
+    } else if (isOver) {
+      statusBadgeClass = 'badge-over';
+      statusText = `Excedido: ${state.currency} ${formatMoney(Math.abs(state.remaining))}`;
+      fillClass = 'fill-over';
+    } else {
+      statusBadgeClass = 'badge-balanced';
+      statusText = '100% Asignado';
+      fillClass = 'fill-exact';
+    }
   }
+
+  const salaryDisplayHtml = state.salary > 0
+    ? `<span class="salary-currency">${state.currency}</span><span class="salary-value">${formatMoney(state.salary)}</span>`
+    : `<span class="salary-currency">${state.currency}</span><span class="salary-value" style="opacity: 0.85;">0.00</span> <span style="font-size: 11px; color: var(--accent-blue); margin-left: 6px; font-weight: 600;">(Toca para ingresar)</span>`;
 
   container.innerHTML = `
     <div class="salary-header-box animate-pop-in">
@@ -60,14 +70,13 @@ function renderSalaryCard(state) {
       </div>
 
       <div class="salary-amount-row" id="salaryDisplayRow">
-        <div class="salary-amount-display" id="salaryAmountTrigger" title="Clic para editar sueldo">
-          <span class="salary-currency">${state.currency}</span>
-          <span class="salary-value">${formatMoney(state.salary)}</span>
+        <div class="salary-amount-display" id="salaryAmountTrigger" title="Clic para ingresar sueldo">
+          ${salaryDisplayHtml}
         </div>
       </div>
 
       <div class="salary-inline-input-wrapper" id="salaryInputWrapper">
-        <input type="number" step="any" class="salary-inline-input" id="salaryDirectInput" value="${state.salary}" placeholder="0.00" />
+        <input type="number" step="any" class="salary-inline-input" id="salaryDirectInput" value="${state.salary || ''}" placeholder="Ej. 2500" />
         <button class="salary-confirm-btn" id="btnConfirmSalary">
           ${Icons.check} Guardar
         </button>
@@ -75,10 +84,10 @@ function renderSalaryCard(state) {
 
       <div class="salary-progress-wrapper">
         <div class="salary-progress-bar-bg">
-          <div class="salary-progress-fill ${fillClass}" style="width: ${state.percentAllocated}%"></div>
+          <div class="salary-progress-fill ${fillClass}" style="width: ${state.percentAllocated || 0}%"></div>
         </div>
         <div class="salary-meta-info">
-          <span class="salary-assigned-text">Asignado: ${state.currency} ${formatMoney(state.totalAllocated)} (${state.rawPercent.toFixed(0)}%)</span>
+          <span class="salary-assigned-text">Asignado: ${state.currency} ${formatMoney(state.totalAllocated)} (${(state.rawPercent || 0).toFixed(0)}%)</span>
           <span class="salary-badge-status ${statusBadgeClass}">
             ${statusText}
           </span>
@@ -111,7 +120,7 @@ function renderCategorySections(state) {
     let itemsHtml = '';
     if (category.items.length === 0) {
       itemsHtml = `
-        <div style="text-align: center; padding: 12px; font-size: 12px; color: var(--text-dim); font-style: italic;">
+        <div style="text-align: center; padding: 12px 10px; font-size: 11.5px; color: var(--text-dim); background: rgba(0,0,0,0.12); border-radius: var(--radius-sm); margin-bottom: 6px;">
           Sin gastos añadidos en esta categoría
         </div>
       `;
