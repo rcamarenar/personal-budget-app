@@ -13,10 +13,18 @@ class BudgetApp {
     this.initClock();
     this.initEventListeners();
 
-    // Subscribe to state changes
+    // Subscribe to budget state changes
     window.budgetStore.subscribe((state) => {
       this.handleStateUpdate(state);
     });
+
+    // Subscribe to transactions state changes
+    if (window.txStore) {
+      window.txStore.subscribe((txState) => {
+        this.handleStateUpdate(window.budgetStore.getState(), txState);
+      });
+      window.txStore.init();
+    }
   }
 
   initClock() {
@@ -31,12 +39,16 @@ class BudgetApp {
     setInterval(updateTime, 10000);
   }
 
-  handleStateUpdate(state) {
+  handleStateUpdate(state, txState = (window.txStore ? window.txStore.getState() : null)) {
     window.uiRenderers.renderSalaryCard(state);
     window.uiRenderers.renderCategorySections(state);
     window.uiRenderers.renderBottomTotal(state);
     window.uiRenderers.renderDistributionTab(state);
     window.uiRenderers.renderAvoidableEvolutionTab(state);
+    window.uiRenderers.renderSummaryTab(state);
+    if (window.uiRenderers.renderHistoryTab) {
+      window.uiRenderers.renderHistoryTab(state, txState);
+    }
     this.bindSalaryEvents();
   }
 
@@ -437,6 +449,211 @@ class BudgetApp {
       window.uiRenderers.renderDistributionTab(state);
     } else if (tabName === 'avoidable') {
       window.uiRenderers.renderAvoidableEvolutionTab(state);
+    } else if (tabName === 'summary') {
+      window.uiRenderers.renderSummaryTab(state);
+    } else if (tabName === 'history') {
+      const txState = window.txStore ? window.txStore.getState() : null;
+      if (window.uiRenderers.renderHistoryTab) {
+        window.uiRenderers.renderHistoryTab(state, txState);
+      }
+    }
+  }
+
+  // Transaction (Historial) Handlers
+  openAddTxModal() {
+    const conceptInput = document.getElementById('txConceptInput');
+    const amountInput = document.getElementById('txAmountInput');
+    const avoidableCheckbox = document.getElementById('txAvoidableCheckbox');
+    
+    if (conceptInput) conceptInput.value = '';
+    if (amountInput) amountInput.value = '';
+    if (avoidableCheckbox) avoidableCheckbox.checked = false;
+
+    this.openModal('addTxModal');
+    setTimeout(() => {
+      if (conceptInput) conceptInput.focus();
+    }, 150);
+  }
+
+  async saveNewTransaction() {
+    const concept = (document.getElementById('txConceptInput')?.value || '').trim();
+    const amount = parseFloat(document.getElementById('txAmountInput')?.value) || 0;
+    const categoryTitle = document.getElementById('txCategorySelect')?.value || 'GASTOS ESENCIALES';
+    const paymentMethod = document.getElementById('txPaymentSelect')?.value || 'Yape';
+    const isAvoidable = !!document.getElementById('txAvoidableCheckbox')?.checked;
+
+    if (!concept) {
+      alert('Por favor, ingresa el concepto del gasto.');
+      return;
+    }
+    if (amount <= 0) {
+      alert('Por favor, ingresa un monto válido mayor a cero.');
+      return;
+    }
+
+    if (window.txStore) {
+      await window.txStore.addTransaction({
+        concept,
+        amount,
+        categoryTitle,
+        paymentMethod,
+        isAvoidable
+      });
+    }
+
+    this.closeModal('addTxModal');
+    this.showToast(`Gasto registrado: -${window.budgetStore.getState().currency} ${window.uiRenderers.formatMoney(amount)}`);
+  }
+
+  async handleDeleteTx(txId) {
+    if (confirm('¿Deseas eliminar este registro del historial?')) {
+      if (window.txStore) {
+        await window.txStore.deleteTransaction(txId);
+      }
+      this.showToast('Gasto eliminado del historial');
+    }
+  }
+
+  // Receipt & Screenshot OCR Handlers
+  openReceiptScannerModal() {
+    const prompt = document.getElementById('ocrPromptContent');
+    const previewContainer = document.getElementById('ocrPreviewContainer');
+    const extractedForm = document.getElementById('ocrExtractedForm');
+    const fileInput = document.getElementById('ocrFileInput');
+
+    if (prompt) prompt.style.display = 'block';
+    if (previewContainer) previewContainer.style.display = 'none';
+    if (extractedForm) extractedForm.style.display = 'none';
+    if (fileInput) fileInput.value = '';
+
+    this.openModal('receiptScannerModal');
+  }
+
+  async handleReceiptFileSelect(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const prompt = document.getElementById('ocrPromptContent');
+    const previewContainer = document.getElementById('ocrPreviewContainer');
+    const previewImg = document.getElementById('ocrPreviewImg');
+    const extractedForm = document.getElementById('ocrExtractedForm');
+
+    // Show image preview
+    if (previewImg) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        previewImg.src = e.target.result;
+        if (prompt) prompt.style.display = 'none';
+        if (previewContainer) previewContainer.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    this.showToast('Analizando voucher con OCR...');
+
+    if (window.receiptScanner) {
+      try {
+        const data = await window.receiptScanner.processImageFile(file);
+        if (data) {
+          const amountInput = document.getElementById('ocrDetectedAmount');
+          const methodSelect = document.getElementById('ocrDetectedMethod');
+          const conceptInput = document.getElementById('ocrDetectedConcept');
+          const catSelect = document.getElementById('ocrDetectedCategory');
+
+          if (amountInput) amountInput.value = data.amount;
+          if (methodSelect) methodSelect.value = data.paymentMethod || 'Yape';
+          if (conceptInput) conceptInput.value = data.concept || 'Consumo';
+          if (catSelect) catSelect.value = data.categoryTitle || 'GASTOS ESENCIALES';
+
+          if (extractedForm) extractedForm.style.display = 'block';
+          this.showToast('✨ Voucher reconocido correctamente');
+        }
+      } catch (err) {
+        console.error('Error scanning receipt:', err);
+        this.showToast('Error al procesar el archivo');
+      }
+    }
+  }
+
+  async confirmOcrTransaction() {
+    const amount = parseFloat(document.getElementById('ocrDetectedAmount')?.value) || 0;
+    const paymentMethod = document.getElementById('ocrDetectedMethod')?.value || 'Yape';
+    const concept = (document.getElementById('ocrDetectedConcept')?.value || 'Voucher escaneado').trim();
+    const categoryTitle = document.getElementById('ocrDetectedCategory')?.value || 'GASTOS ESENCIALES';
+
+    if (amount <= 0) {
+      alert('Monto inválido.');
+      return;
+    }
+
+    if (window.txStore) {
+      await window.txStore.addTransaction({
+        concept,
+        amount,
+        categoryTitle,
+        paymentMethod,
+        source: 'ocr_scanner',
+        isAvoidable: categoryTitle === 'PLANIFICACIÓN'
+      });
+    }
+
+    this.closeModal('receiptScannerModal');
+    this.showToast(`Voucher registrado: -${window.budgetStore.getState().currency} ${window.uiRenderers.formatMoney(amount)}`);
+  }
+
+  // WhatsApp Assistant Handlers
+  openWhatsAppAssistantModal() {
+    this.openModal('whatsappAssistantModal');
+    setTimeout(() => {
+      const input = document.getElementById('waChatInput');
+      if (input) input.focus();
+    }, 150);
+  }
+
+  fillWaSample(text) {
+    const input = document.getElementById('waChatInput');
+    if (input) {
+      input.value = text;
+      input.focus();
+    }
+  }
+
+  async sendWhatsAppSimulation() {
+    const input = document.getElementById('waChatInput');
+    const messagesContainer = document.getElementById('waChatMessages');
+    if (!input || !messagesContainer) return;
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    // Add User outgoing message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'wa-msg wa-msg-sent';
+    userMsg.textContent = message;
+    messagesContainer.appendChild(userMsg);
+    input.value = '';
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+    // Send to Webhook backend
+    try {
+      const res = await window.BudgetAPI.sendWhatsAppMessage(message);
+      const botMsg = document.createElement('div');
+      botMsg.className = 'wa-msg wa-msg-received';
+      
+      if (res && res.success) {
+        botMsg.innerHTML = res.reply || `✅ Gasto de S/. ${res.data.amount} registrado con éxito.`;
+        if (window.txStore) {
+          await window.txStore.fetchTransactions();
+        }
+        this.showToast('Gasto agregado vía WhatsApp');
+      } else {
+        botMsg.textContent = '❌ No se pudo registrar. Prueba indicando monto y concepto (ej. "Almuerzo 20").';
+      }
+
+      messagesContainer.appendChild(botMsg);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    } catch (err) {
+      console.error('Error in WhatsApp simulation:', err);
     }
   }
 

@@ -1,0 +1,91 @@
+[
+  {
+    "id": "tx-1789412562970",
+    "date": "2026-09-14T19:02:42.970Z",
+    "concept": "Cine y combos   ocio",
+    "amount": 36,
+    "categoryTitle": "PLANIFICACIÓN",
+    "itemName": "Cine y combos   ocio",
+    "paymentMethod": "Plin",
+    "isAvoidable": true,
+    "source": "whatsapp",
+    "notes": "Enviado desde WhatsApp (Tú)"
+  },
+  {
+    "id": "tx-1789412476590",
+    "date": "2026-09-14T19:01:16.564Z",
+    "concept": "Almuerzo Ejecutivo",
+    "amount": 26.5,
+    "categoryTitle": "GASTOS ESENCIALES",
+    "itemName": "Almuerzo Ejecutivo",
+    "paymentMethod": "Yape",
+    "isAvoidable": false,
+    "source": "manual",
+    "notes": ""
+  },
+  {
+    "id": "tx-101",
+    "date": "2026-09-14T11:30:00.000Z",
+    "concept": "Almuerzo Menú Ejecutivo",
+    "amount": 25,
+    "categoryId": "cat-esenciales",
+    "categoryTitle": "GASTOS ESENCIALES",
+    "itemName": "Alimentación",
+    "paymentMethod": "Yape",
+    "isAvoidable": false,
+    "source": "manual",
+    "notes": "Restaurante Don Pepe"
+  },
+  {
+    "id": "tx-102",
+    "date": "2026-09-14T09:15:00.000Z",
+    "concept": "Pasaje Taxi a oficina",
+    "amount": 18,
+    "categoryId": "cat-esenciales",
+    "categoryTitle": "GASTOS ESENCIALES",
+    "itemName": "Transporte",
+    "paymentMethod": "Plin",
+    "isAvoidable": false,
+    "source": "whatsapp",
+    "notes": "Registrado vía WhatsApp"
+  },
+  {
+    "id": "tx-103",
+    "date": "2026-09-13T19:40:00.000Z",
+    "concept": "Café y postre con amigos",
+    "amount": 32.5,
+    "categoryId": "cat-plan",
+    "categoryTitle": "PLANIFICACIÓN",
+    "itemName": "Ocio / imprevistos",
+    "paymentMethod": "Tarjeta",
+    "isAvoidable": true,
+    "source": "screenshot",
+    "notes": "Voucher Starbucks Yape"
+  },
+  {
+    "id": "tx-104",
+    "date": "2026-09-12T16:00:00.000Z",
+    "concept": "Compras de supermercado semanal",
+    "amount": 145,
+    "categoryId": "cat-esenciales",
+    "categoryTitle": "GASTOS ESENCIALES",
+    "itemName": "Alimentación",
+    "paymentMethod": "Tarjeta",
+    "isAvoidable": false,
+    "source": "manual",
+    "notes": "Plaza Vea"
+  },
+  {
+    "id": "tx-105",
+    "date": "2026-09-10T10:00:00.000Z",
+    "concept": "Recibo de Luz y Agua",
+    "amount": 120,
+    "categoryId": "cat-fijos",
+    "categoryTitle": "GASTOS FIJOS",
+    "itemName": "Agua y luz",
+    "paymentMethod": "Transferencia",
+    "isAvoidable": false,
+    "source": "manual",
+    "notes": "Pago mensual Enel / Sedapal"
+  }
+]

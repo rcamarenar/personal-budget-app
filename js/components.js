@@ -340,11 +340,156 @@ async function renderAvoidableEvolutionTab(state) {
   }
 }
 
+// Render the Dynamic Summary Tab
+function renderSummaryTab(state) {
+  const container = document.getElementById('summaryViewContainer');
+  if (!container) return;
+
+  let categoriesHtml = '';
+  state.categoryStats.forEach(cat => {
+    categoriesHtml += `
+      <div style="margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3px;">
+          <span style="font-size: 13px; font-weight: 700; color: ${cat.color};">${cat.title} (${cat.percentage}%)</span>
+          <span style="font-size: 13px; font-weight: 700; font-family: var(--font-mono); color: var(--white-pure);">${state.currency} ${formatMoney(cat.subtotal)}</span>
+        </div>
+        <div style="font-size: 11px; color: var(--text-muted);">${cat.itemCount} gastos registrados</div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = `
+    <div class="chart-card animate-slide-up">
+      <h3 style="font-size: 15px; margin-bottom: 6px; color: var(--white-pure);">Regla del Presupuesto</h3>
+      <p style="font-size: 12px; color: var(--text-dim); line-height: 1.5; margin-bottom: 14px;">
+        Estructura calculada sobre el sueldo mensual administrado de <strong style="color: var(--accent-blue);">${state.currency} ${formatMoney(state.salary)}</strong>.
+      </p>
+
+      <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 12px 14px; text-align: left; margin-bottom: 14px; border: 1px solid var(--border-subtle);">
+        ${categoriesHtml}
+      </div>
+
+      <button class="btn-primary" style="width: 100%; margin-bottom: 8px;" onclick="window.app.copyBudgetSummary()">
+        📋 Copiar Resumen Formateado
+      </button>
+    </div>
+  `;
+}
+
+// Render the Historical Daily & Monthly Transactions Ledger
+function renderHistoryTab(budgetState, txState) {
+  const container = document.getElementById('historyViewContainer');
+  if (!container) return;
+
+  const currency = budgetState.currency || 'S/.';
+  const totalSpent = txState ? txState.totalSpent : 0;
+  const avoidableSpent = txState ? txState.avoidableSpent : 0;
+  const count = txState ? txState.totalCount : 0;
+  const groupedDays = txState ? txState.groupedDays : [];
+
+  let daysHtml = '';
+  if (groupedDays.length === 0) {
+    daysHtml = `
+      <div style="text-align: center; padding: 30px 16px; color: var(--text-dim);">
+        <p style="font-size: 13px; margin-bottom: 8px;">No hay gastos registrados en el historial.</p>
+        <button class="btn-primary" onclick="window.app.openAddTxModal()">+ Registrar Primer Gasto</button>
+      </div>
+    `;
+  } else {
+    groupedDays.forEach(group => {
+      let itemsHtml = '';
+      group.items.forEach(tx => {
+        let methodClass = 'badge-method-yape';
+        if (tx.paymentMethod === 'Plin') methodClass = 'badge-method-plin';
+        if (tx.paymentMethod === 'Tarjeta') methodClass = 'badge-method-card';
+        if (tx.paymentMethod === 'Transferencia') methodClass = 'badge-method-bank';
+        if (tx.paymentMethod === 'WhatsApp') methodClass = 'badge-method-wa';
+
+        const avoidableTag = tx.isAvoidable 
+          ? `<span class="item-avoidable-pill" style="margin-left: 4px;">⚡ Evitable</span>` 
+          : '';
+
+        itemsHtml += `
+          <div class="tx-card-row">
+            <div class="tx-left">
+              <div class="tx-concept-line">
+                <span class="tx-concept-text">${tx.concept}</span>
+                ${avoidableTag}
+              </div>
+              <div class="tx-meta-line">
+                <span class="tx-method-pill ${methodClass}">${tx.paymentMethod}</span>
+                <span class="tx-category-name">${tx.categoryTitle}</span>
+              </div>
+            </div>
+            <div class="tx-right">
+              <span class="tx-amount-text">-${currency} ${formatMoney(tx.amount)}</span>
+              <button class="tx-delete-btn" onclick="window.app.handleDeleteTx('${tx.id}')" title="Eliminar registro">
+                ✕
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      daysHtml += `
+        <div class="history-day-group animate-slide-up">
+          <div class="history-day-header">
+            <span class="day-label">${group.dateLabel}</span>
+            <span class="day-subtotal">Total: ${currency} ${formatMoney(group.dayTotal)}</span>
+          </div>
+          <div class="history-day-items">
+            ${itemsHtml}
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  container.innerHTML = `
+    <!-- Top Action Buttons -->
+    <div class="history-quick-actions">
+      <button class="btn-action-tile" onclick="window.app.openAddTxModal()">
+        <span class="tile-icon">${Icons.plus}</span>
+        <span>Nuevo Gasto</span>
+      </button>
+      <button class="btn-action-tile tile-scanner" onclick="window.app.openReceiptScannerModal()">
+        <span class="tile-icon">📸</span>
+        <span>Escanear Screenshot</span>
+      </button>
+      <button class="btn-action-tile tile-whatsapp" onclick="window.app.openWhatsAppAssistantModal()">
+        <span class="tile-icon">💬</span>
+        <span>WhatsApp</span>
+      </button>
+    </div>
+
+    <!-- History Summary Metrics -->
+    <div class="history-summary-cards">
+      <div class="history-metric-card">
+        <div class="metric-title">Gasto Real Registrado</div>
+        <div class="metric-value text-red">${currency} ${formatMoney(totalSpent)}</div>
+        <div class="metric-detail">${count} consumos este mes</div>
+      </div>
+      <div class="history-metric-card">
+        <div class="metric-title">Presupuesto Mensual</div>
+        <div class="metric-value text-blue">${currency} ${formatMoney(budgetState.salary)}</div>
+        <div class="metric-detail">Planificado a administrar</div>
+      </div>
+    </div>
+
+    <!-- Timeline Days List -->
+    <div class="history-timeline-list">
+      ${daysHtml}
+    </div>
+  `;
+}
+
 window.uiRenderers = {
   renderSalaryCard,
   renderCategorySections,
   renderBottomTotal,
   renderDistributionTab,
   renderAvoidableEvolutionTab,
+  renderSummaryTab,
+  renderHistoryTab,
   formatMoney
 };

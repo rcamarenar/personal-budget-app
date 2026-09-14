@@ -153,6 +153,79 @@ const BudgetAPI = {
       console.warn('API error resetBudget', err);
       return null;
     }
+  },
+
+  // Transactions Endpoints
+  async getTransactions() {
+    try {
+      const res = await fetch(`${API_BASE}/transactions`);
+      if (!res.ok) throw new Error('API Error');
+      const json = await res.json();
+      return json.data;
+    } catch (err) {
+      console.warn('API error getTransactions', err);
+      return null;
+    }
+  },
+
+  async createTransaction(txData) {
+    try {
+      const res = await fetch(`${API_BASE}/transactions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(txData)
+      });
+      const json = await res.json();
+      return json.data;
+    } catch (err) {
+      console.warn('API error createTransaction', err);
+      return null;
+    }
+  },
+
+  async deleteTransaction(txId) {
+    try {
+      const res = await fetch(`${API_BASE}/transactions/${txId}`, {
+        method: 'DELETE'
+      });
+      const json = await res.json();
+      return json;
+    } catch (err) {
+      console.warn('API error deleteTransaction', err);
+      return null;
+    }
+  },
+
+  // Scan Receipt / Screenshot OCR
+  async scanReceipt(payload) {
+    try {
+      const res = await fetch(`${API_BASE}/transactions/scan-receipt`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const json = await res.json();
+      return json.data;
+    } catch (err) {
+      console.warn('API error scanReceipt', err);
+      return null;
+    }
+  },
+
+  // WhatsApp Webhook Simulation
+  async sendWhatsAppMessage(message) {
+    try {
+      const res = await fetch(`${API_BASE}/webhook/whatsapp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, senderName: 'Tú' })
+      });
+      const json = await res.json();
+      return json;
+    } catch (err) {
+      console.warn('API error sendWhatsAppMessage', err);
+      return null;
+    }
   }
 };
 

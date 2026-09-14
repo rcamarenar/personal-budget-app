@@ -651,6 +651,322 @@
   border-radius: var(--radius-sm);
 }
 
+/* =========================================================
+   HISTORICAL DAILY & MONTHLY TRANSACTIONS SECTION
+   ========================================================= */
+
+.history-quick-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.btn-action-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 6px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(30, 58, 102, 0.25) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: var(--radius-md);
+  color: var(--white-pure);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-action-tile:hover {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.3) 0%, rgba(56, 189, 248, 0.3) 100%);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+.btn-action-tile .tile-icon {
+  font-size: 18px;
+}
+
+.btn-action-tile.tile-scanner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(13, 75, 50, 0.25) 100%);
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+.btn-action-tile.tile-scanner:hover {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(52, 211, 153, 0.3) 100%);
+  border-color: var(--accent-green);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.btn-action-tile.tile-whatsapp {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(20, 83, 45, 0.25) 100%);
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+.btn-action-tile.tile-whatsapp:hover {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(74, 222, 128, 0.3) 100%);
+  border-color: #22c55e;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+/* History Summary Cards */
+.history-summary-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.history-metric-card {
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.history-metric-card .metric-title {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.history-metric-card .metric-value {
+  font-size: 18px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+
+.history-metric-card .metric-value.text-red {
+  color: #f87171;
+}
+
+.history-metric-card .metric-value.text-blue {
+  color: var(--accent-blue);
+}
+
+.history-metric-card .metric-detail {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* Timeline & Day Grouping */
+.history-timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.history-day-group {
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.history-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.history-day-header .day-label {
+  font-size: 11.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--accent-blue);
+}
+
+.history-day-header .day-subtotal {
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--white-dim);
+}
+
+.history-day-items {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tx-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 4px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.tx-card-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.tx-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tx-concept-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tx-concept-text {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white-pure);
+}
+
+.tx-meta-line {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tx-method-pill {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+}
+
+.badge-method-yape {
+  background: rgba(139, 92, 246, 0.2);
+  color: #c4b5fd;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+}
+
+.badge-method-plin {
+  background: rgba(6, 182, 212, 0.2);
+  color: #67e8f9;
+  border: 1px solid rgba(6, 182, 212, 0.4);
+}
+
+.badge-method-card {
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border: 1px solid rgba(59, 130, 246, 0.4);
+}
+
+.badge-method-bank {
+  background: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.badge-method-wa {
+  background: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.tx-category-name {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+.tx-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tx-amount-text {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #f87171;
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+}
+
+.tx-delete-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: all var(--transition-fast);
+}
+
+.tx-delete-btn:hover {
+  color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* OCR Dropzone */
+.ocr-dropzone {
+  border: 2px dashed rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-md);
+  padding: 18px 14px;
+  text-align: center;
+  background: rgba(56, 189, 248, 0.04);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ocr-dropzone:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: var(--accent-blue);
+}
+
+/* WhatsApp Chat Simulator */
+.wa-chat-box {
+  height: 150px;
+  background: #071322;
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.wa-msg {
+  max-width: 80%;
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.wa-msg-received {
+  background: #1e293b;
+  color: var(--white-pure);
+  align-self: flex-start;
+  border-bottom-left-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wa-msg-sent {
+  background: #065f46;
+  color: #ecfdf5;
+  align-self: flex-end;
+  border-bottom-right-radius: 2px;
+}
+
+.wa-input-row {
+  display: flex;
+  gap: 6px;
+}
+
 .btn-chip {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid var(--border-subtle);

@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Personal Budget App - iPhone & Laptop UI Design</title>
-  <meta name="description" content="Diseño de interfaz de usuario de presupuesto personal con backend en Express, gráficos de distribución y evolución de gastos evitables.">
+  <meta name="description" content="Diseño de interfaz de usuario de presupuesto personal con historial diario/mensual, escaneo de vouchers OCR y asistente WhatsApp.">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,6 +85,9 @@
             <h1 class="app-main-heading">Mi Presupuesto</h1>
           </div>
           <div class="app-nav-actions">
+            <button class="icon-btn-round" onclick="window.app.openReceiptScannerModal()" title="Escanear comprobante / screenshot">
+              📸
+            </button>
             <button class="icon-btn-round" onclick="window.app.copyBudgetSummary()" title="Compartir / Copiar resumen">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
             </button>
@@ -97,14 +100,16 @@
 
             <!-- VIEW 1: Budget Management (Default) -->
             <div class="view-section active-view" id="view-budget">
-              <!-- Salary Header Card Container -->
               <div id="salaryHeaderContainer"></div>
-
-              <!-- Dynamic Category Sections Container -->
               <div class="budget-sections-list" id="budgetSectionsContainer"></div>
             </div>
 
-            <!-- VIEW 2: Charts & Distribution -->
+            <!-- VIEW 2: History & Daily Ledger -->
+            <div class="view-section" id="view-history">
+              <div id="historyViewContainer"></div>
+            </div>
+
+            <!-- VIEW 3: Charts & Distribution -->
             <div class="view-section" id="view-charts">
               <div class="chart-card animate-slide-up">
                 <h3 style="font-size: 15px; margin-bottom: 3px; color: var(--white-pure);">Distribución de Gastos</h3>
@@ -122,7 +127,7 @@
               </div>
             </div>
 
-            <!-- VIEW 3: Avoidable Expenses Evolution & Projection -->
+            <!-- VIEW 4: Avoidable Expenses Evolution & Projection -->
             <div class="view-section" id="view-avoidable">
               <div class="chart-card animate-slide-up">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
@@ -160,29 +165,9 @@
               </div>
             </div>
 
-            <!-- VIEW 4: Summary & Notes -->
+            <!-- VIEW 5: Summary & Notes -->
             <div class="view-section" id="view-summary">
-              <div class="chart-card animate-slide-up">
-                <h3 style="font-size: 15px; margin-bottom: 6px; color: var(--white-pure);">Regla del Presupuesto</h3>
-                <p style="font-size: 12px; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px;">
-                  Estructura balanceada basada en el plan mensual de <strong>S/. 2,500</strong>.
-                </p>
-
-                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 12px; text-align: left; margin-bottom: 12px; border: 1px solid var(--border-subtle);">
-                  <div style="font-size: 12.5px; font-weight: 700; color: var(--cat-fijos); margin-bottom: 3px;">🏠 Gastos Fijos (40.8%)</div>
-                  <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Obligaciones fijas mensuales (Renta, Luz, Agua, Conectividad).</p>
-
-                  <div style="font-size: 12.5px; font-weight: 700; color: var(--cat-esenciales); margin-bottom: 3px;">🛒 Gastos Esenciales (25.2%)</div>
-                  <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Necesidades primarias variables (Alimentación, Transporte, Salud).</p>
-
-                  <div style="font-size: 12.5px; font-weight: 700; color: var(--cat-plan); margin-bottom: 3px;">📈 Planificación & Ahorro (34.0%)</div>
-                  <p style="font-size: 11.5px; color: var(--text-muted);">Construcción de patrimonio (Fondo de emergencia, Inversión, Ocio/imprevistos).</p>
-                </div>
-
-                <button class="btn-primary" style="width: 100%; margin-bottom: 8px;" onclick="window.app.copyBudgetSummary()">
-                  📋 Copiar Resumen Formateado
-                </button>
-              </div>
+              <div id="summaryViewContainer"></div>
             </div>
 
           </main>
@@ -195,6 +180,11 @@
               <button class="tab-item active" id="tabBtn-budget" onclick="window.app.switchTab('budget')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
                 <span>Presupuesto</span>
+              </button>
+
+              <button class="tab-item" id="tabBtn-history" onclick="window.app.switchTab('history')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                <span>Historial</span>
               </button>
 
               <button class="tab-item" id="tabBtn-charts" onclick="window.app.switchTab('charts')">
@@ -280,7 +270,7 @@
           </div>
         </div>
 
-        <!-- MODAL 2: Add New Item -->
+        <!-- MODAL 2: Add New Item to Budget -->
         <div class="modal-backdrop" id="addItemModal">
           <div class="modal-sheet">
             <div class="modal-drag-pill"></div>
@@ -370,6 +360,157 @@
           </div>
         </div>
 
+        <!-- MODAL 5: Add Daily Transaction (Historial) -->
+        <div class="modal-backdrop" id="addTxModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <h2 class="modal-title">Registrar Gasto Diario</h2>
+              <button class="modal-close-btn" onclick="window.app.closeModal('addTxModal')">✕</button>
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="txConceptInput">Concepto / Descripción</label>
+              <input type="text" id="txConceptInput" class="modal-input" placeholder="Ej. Almuerzo menú, Gasolina, Farmacia...">
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="txAmountInput">Monto</label>
+              <input type="number" step="any" id="txAmountInput" class="modal-input" placeholder="0.00">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="modal-form-group">
+                <label class="modal-label" for="txCategorySelect">Categoría</label>
+                <select id="txCategorySelect" class="modal-input" style="padding: 9px 8px;">
+                  <option value="GASTOS ESENCIALES">Gastos Esenciales</option>
+                  <option value="GASTOS FIJOS">Gastos Fijos</option>
+                  <option value="PLANIFICACIÓN">Planificación / Ocio</option>
+                </select>
+              </div>
+              <div class="modal-form-group">
+                <label class="modal-label" for="txPaymentSelect">Método de Pago</label>
+                <select id="txPaymentSelect" class="modal-input" style="padding: 9px 8px;">
+                  <option value="Yape">💜 Yape</option>
+                  <option value="Plin">💙 Plin</option>
+                  <option value="Tarjeta">💳 Tarjeta</option>
+                  <option value="Efectivo">💵 Efectivo</option>
+                  <option value="Transferencia">🏦 Transferencia</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-form-group" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-md); padding: 8px 12px; margin-top: 4px;">
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 12px; font-weight: 600; color: #fca5a5;">
+                <span>⚡ Es un Gasto Evitable / Prescindible</span>
+                <input type="checkbox" id="txAvoidableCheckbox" style="accent-color: var(--accent-red); width: 16px; height: 16px;">
+              </label>
+            </div>
+            <div class="modal-btn-row">
+              <button class="btn-secondary" onclick="window.app.closeModal('addTxModal')">Cancelar</button>
+              <button class="btn-primary" onclick="window.app.saveNewTransaction()">Guardar Gasto</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL 6: Receipt & Screenshot OCR Scanner -->
+        <div class="modal-backdrop" id="receiptScannerModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 18px;">📸</span>
+                <h2 class="modal-title">Escanear Screenshot / Voucher</h2>
+              </div>
+              <button class="modal-close-btn" onclick="window.app.closeModal('receiptScannerModal')">✕</button>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 12px;">Sube o arrastra capturas de Yape, Plin, tickets POS o transferencias bancarias.</p>
+
+            <!-- Dropzone Area -->
+            <div class="ocr-dropzone" id="ocrDropzone" onclick="document.getElementById('ocrFileInput').click()">
+              <input type="file" id="ocrFileInput" accept="image/*" style="display: none;" onchange="window.app.handleReceiptFileSelect(event)">
+              <div id="ocrPromptContent">
+                <div style="font-size: 28px; margin-bottom: 4px;">📲</div>
+                <div style="font-size: 12.5px; font-weight: 700; color: var(--accent-blue);">Toca para elegir captura o foto</div>
+                <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 2px;">Compatible con Yape, Plin, BCP, BBVA, POS</div>
+              </div>
+              <div id="ocrPreviewContainer" style="display: none; width: 100%;">
+                <img id="ocrPreviewImg" src="" alt="Vista previa voucher" style="max-height: 120px; border-radius: 8px; margin: 0 auto; display: block; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                <div style="font-size: 11px; color: var(--accent-green-light); font-weight: 700; margin-top: 6px;">✓ Voucher cargado</div>
+              </div>
+            </div>
+
+            <!-- Extracted Details Form (Auto-filled by OCR) -->
+            <div id="ocrExtractedForm" style="display: none; margin-top: 12px; background: rgba(0,0,0,0.25); border: 1px solid var(--border-card); border-radius: var(--radius-md); padding: 10px;">
+              <div style="font-size: 11px; font-weight: 700; color: var(--accent-green-light); margin-bottom: 8px; text-transform: uppercase;">✨ Datos Reconocidos Automáticamente:</div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
+                <div>
+                  <label class="modal-label">Monto</label>
+                  <input type="number" step="any" id="ocrDetectedAmount" class="modal-input">
+                </div>
+                <div>
+                  <label class="modal-label">Método</label>
+                  <select id="ocrDetectedMethod" class="modal-input">
+                    <option value="Yape">💜 Yape</option>
+                    <option value="Plin">💙 Plin</option>
+                    <option value="Tarjeta">💳 Tarjeta</option>
+                    <option value="Transferencia">🏦 Transferencia</option>
+                  </select>
+                </div>
+              </div>
+              <div class="modal-form-group" style="margin-bottom: 8px;">
+                <label class="modal-label">Concepto / Destinatario</label>
+                <input type="text" id="ocrDetectedConcept" class="modal-input">
+              </div>
+              <div class="modal-form-group" style="margin-bottom: 8px;">
+                <label class="modal-label">Categoría Sugerida</label>
+                <select id="ocrDetectedCategory" class="modal-input">
+                  <option value="GASTOS ESENCIALES">Gastos Esenciales</option>
+                  <option value="PLANIFICACIÓN">Planificación / Ocio</option>
+                  <option value="GASTOS FIJOS">Gastos Fijos</option>
+                </select>
+              </div>
+              <button class="btn-primary" style="width: 100%; margin-top: 6px;" onclick="window.app.confirmOcrTransaction()">
+                ✓ Confirmar y Registrar en Historial
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL 7: WhatsApp Assistant & Simulator -->
+        <div class="modal-backdrop" id="whatsappAssistantModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 20px;">💬</span>
+                <h2 class="modal-title">Asistente WhatsApp</h2>
+              </div>
+              <button class="modal-close-btn" onclick="window.app.closeModal('whatsappAssistantModal')">✕</button>
+            </div>
+            <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px;">Registra gastos directamente chateando. El sistema reconoce montos y conceptos automáticamente.</p>
+
+            <!-- Quick Example Chips -->
+            <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 4px;">Ejemplos rápidos (haz clic para probar):</div>
+            <div style="display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: 12px;">
+              <button type="button" class="btn-chip" onclick="window.app.fillWaSample('Almuerzo 22 soles alimentacion yape')">Almuerzo 22 yape</button>
+              <button type="button" class="btn-chip" onclick="window.app.fillWaSample('Taxi 15 transporte plin')">Taxi 15 plin</button>
+              <button type="button" class="btn-chip" onclick="window.app.fillWaSample('Cine y postre 35 ocio')">Cine 35 ocio</button>
+              <button type="button" class="btn-chip" onclick="window.app.fillWaSample('Farmacia 45 salud tarjeta')">Farmacia 45 salud</button>
+            </div>
+
+            <!-- WhatsApp Chat Simulator Container -->
+            <div class="wa-chat-box" id="waChatMessages">
+              <div class="wa-msg wa-msg-received">
+                👋 ¡Hola! Escríbeme cualquier gasto o pago (ej. <em>"Almuerzo 25 soles yape"</em>) y lo registraré en tu historial al instante.
+              </div>
+            </div>
+
+            <div class="wa-input-row">
+              <input type="text" id="waChatInput" class="modal-input" placeholder="Escribe un gasto aquí..." onkeydown="if(event.key==='Enter') window.app.sendWhatsAppSimulation()">
+              <button class="btn-primary" style="padding: 8px 14px; width: auto; font-size: 13px;" onclick="window.app.sendWhatsAppSimulation()">
+                Enviar ➔
+              </button>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -380,6 +521,8 @@
 <!-- Application Scripts -->
 <script src="js/api.js"></script>
 <script src="js/state.js"></script>
+<script src="js/transactions.js"></script>
+<script src="js/ocr-scanner.js"></script>
 <script src="js/chart.js"></script>
 <script src="js/evolution-chart.js"></script>
 <script src="js/components.js"></script>
