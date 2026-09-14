@@ -1,0 +1,1172 @@
+/* =========================================================
+   Personal Budget Mobile App Styles (Dark Blue & White Palette)
+   ========================================================= */
+
+/* Main Scrollable Content Area */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--bg-app-dark);
+  color: var(--white-pure);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 6px 14px 96px 14px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+.app-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.app-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+/* App Top Navigation Bar */
+.app-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 14px 10px 14px;
+  background: var(--bg-app-dark);
+  z-index: 20;
+  flex-shrink: 0;
+}
+
+.app-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.app-subtitle {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--accent-blue);
+}
+
+.app-main-heading {
+  font-size: 19px;
+  font-weight: 800;
+  color: var(--white-pure);
+  letter-spacing: -0.4px;
+  margin: 0;
+}
+
+.app-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.icon-btn-round {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border-card);
+  color: var(--white-dim);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.icon-btn-round:hover {
+  background: var(--bg-card-elevated);
+  color: var(--white-pure);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+/* =========================================================
+   HEADER BOX: "Sueldo Mensual a Administrar: S/. 2,500"
+   ========================================================= */
+
+.salary-header-box {
+  background: linear-gradient(145deg, #162a4d 0%, #0f1c34 100%);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45), 0 0 12px rgba(37, 99, 235, 0.1);
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-normal);
+}
+
+.salary-header-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue) 0%, var(--accent-green) 100%);
+}
+
+.salary-box-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.salary-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #cbd5e1;
+  letter-spacing: 0.2px;
+}
+
+.salary-label svg {
+  color: var(--accent-blue);
+}
+
+.salary-box-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Editable Salary Row */
+.salary-amount-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.salary-amount-display {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  font-family: var(--font-sans);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.salary-amount-display:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.salary-currency {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--accent-blue);
+}
+
+.salary-value {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  color: var(--white-pure);
+  font-variant-numeric: tabular-nums;
+}
+
+.salary-inline-input-wrapper {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.salary-inline-input-wrapper.active {
+  display: flex;
+}
+
+.salary-inline-input {
+  background: var(--bg-input-dark);
+  border: 1.5px solid var(--accent-blue);
+  color: var(--white-pure);
+  font-size: 20px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: var(--radius-md);
+  width: 100%;
+  outline: none;
+  font-family: var(--font-sans);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.salary-confirm-btn {
+  background: var(--accent-green);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 7px 12px;
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Pen & Red Trash Action Buttons */
+.btn-action-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+}
+
+.btn-action-pen {
+  color: var(--accent-blue);
+  background: var(--accent-blue-bg);
+  border-color: var(--accent-blue-border);
+}
+
+.btn-action-pen:hover {
+  background: rgba(56, 189, 248, 0.25);
+  color: #ffffff;
+  transform: scale(1.08);
+}
+
+.btn-action-trash {
+  color: var(--accent-red);
+  background: var(--accent-red-bg);
+  border-color: var(--accent-red-border);
+}
+
+.btn-action-trash:hover {
+  background: var(--accent-red);
+  color: #ffffff;
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+}
+
+/* Allocation Bar & Stats inside Salary Card */
+.salary-progress-wrapper {
+  margin-top: 6px;
+}
+
+.salary-progress-bar-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  display: flex;
+}
+
+.salary-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease, background 0.3s ease;
+}
+
+.salary-progress-fill.fill-exact {
+  background: linear-gradient(90deg, #38bdf8, #10b981);
+}
+
+.salary-progress-fill.fill-under {
+  background: linear-gradient(90deg, #38bdf8, #3b82f6);
+}
+
+.salary-progress-fill.fill-over {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+}
+
+.salary-meta-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11.5px;
+}
+
+.salary-badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.salary-badge-status.badge-balanced {
+  background: var(--accent-green-bg);
+  color: var(--accent-green-light);
+  border: 1px solid var(--accent-green-border);
+}
+
+.salary-badge-status.badge-remaining {
+  background: var(--accent-blue-bg);
+  color: var(--accent-blue);
+  border: 1px solid var(--accent-blue-border);
+}
+
+.salary-badge-status.badge-over {
+  background: var(--accent-red-bg);
+  color: var(--accent-red);
+  border: 1px solid var(--accent-red-border);
+}
+
+.salary-assigned-text {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* =========================================================
+   CATEGORY SECTIONS (GASTOS FIJOS, GASTOS ESENCIALES, PLANIFICACIÓN)
+   ========================================================= */
+
+.budget-sections-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.budget-section-card {
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.budget-section-card:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: var(--shadow-md);
+}
+
+/* Section Header */
+.section-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.section-title-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+}
+
+.section-bullet-tag {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.category-fijos .section-bullet-tag {
+  background: var(--cat-fijos);
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+}
+
+.category-esenciales .section-bullet-tag {
+  background: var(--cat-esenciales);
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+}
+
+.category-plan .section-bullet-tag {
+  background: var(--cat-plan);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.section-title-text {
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--white-pure);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition-fast);
+}
+
+.section-title-text:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.section-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.section-subtotal-badge {
+  font-size: 11.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--white-dim);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+}
+
+/* Item Rows with Dotted Leader Lines (Notebook aesthetic, high-tech iOS feel) */
+.section-items-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.budget-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 6px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  position: relative;
+}
+
+.budget-item-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.budget-item-row.is-deleting {
+  opacity: 0;
+  transform: translateX(-15px);
+  transition: all 0.25s ease;
+}
+
+.item-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-shrink: 0;
+  max-width: 46%;
+}
+
+.item-bullet {
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.item-name-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--white-soft);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+
+.item-name-text:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.item-percent-pill {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--accent-green-light);
+  background: var(--accent-green-bg);
+  border: 1px solid var(--accent-green-border);
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  margin-left: 2px;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.item-avoidable-pill {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 1px 5px;
+  border-radius: var(--radius-full);
+  margin-left: 3px;
+  letter-spacing: 0.2px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+}
+
+.bullet-avoidable {
+  background: var(--accent-red) !important;
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.6);
+}
+
+/* =========================================================
+   AVOIDABLE EXPENSES EVOLUTION & SAVINGS SECTION
+   ========================================================= */
+
+.avoidable-metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.avoidable-metric-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.avoidable-metric-card.highlight-metric {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.06);
+}
+
+.metric-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.metric-val {
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric-val.text-red {
+  color: #f87171;
+}
+
+.metric-val.text-green {
+  color: var(--accent-green-light);
+}
+
+.metric-sub {
+  font-size: 9.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+/* Chart Controls Bar */
+.chart-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding: 4px 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-full);
+}
+
+.pills-group {
+  display: flex;
+  gap: 3px;
+}
+
+.pill-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.pill-btn:hover {
+  color: var(--white-pure);
+}
+
+.pill-btn.active {
+  background: var(--bg-card-elevated);
+  color: var(--white-pure);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* Avoidable Canvas Container */
+.avoidable-canvas-container {
+  width: 100%;
+  height: 180px;
+  position: relative;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.avoidable-canvas-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Avoidable Items List */
+.avoidable-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.avoidable-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-sm);
+}
+
+.btn-chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  color: var(--white-soft);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-chip:hover {
+  background: var(--accent-green-bg);
+  border-color: var(--accent-green);
+  color: var(--accent-green-light);
+}
+
+/* Dotted Leader Line */
+.item-dotted-leader {
+  flex: 1;
+  margin: 0 8px;
+  height: 1px;
+  border-bottom: 2px dotted rgba(255, 255, 255, 0.18);
+  min-width: 10px;
+}
+
+/* Item Right Side: Amount, Pen Icon, Trash Icon */
+.item-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.item-amount-badge {
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-sans);
+  color: var(--white-pure);
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background var(--transition-fast);
+}
+
+.item-amount-badge:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.item-action-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 0;
+}
+
+.item-btn-edit {
+  color: var(--accent-blue);
+  background: rgba(56, 189, 248, 0.1);
+}
+
+.item-btn-edit:hover {
+  background: rgba(56, 189, 248, 0.25);
+  color: #ffffff;
+  transform: scale(1.1);
+}
+
+.item-btn-delete {
+  color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.item-btn-delete:hover {
+  background: var(--accent-red);
+  color: #ffffff;
+  transform: scale(1.1);
+  box-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+/* Add Item Button inside Section */
+.btn-add-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-add-item-row:hover {
+  background: rgba(56, 189, 248, 0.08);
+  border-color: var(--accent-blue-border);
+  color: var(--accent-blue);
+}
+
+/* Add New Category Button */
+.btn-add-section-global {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+  background: rgba(30, 58, 102, 0.3);
+  border: 1.5px dashed rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-md);
+  color: var(--accent-blue);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.btn-add-section-global:hover {
+  background: rgba(30, 58, 102, 0.6);
+  border-color: var(--accent-blue);
+  color: var(--white-pure);
+  transform: translateY(-1px);
+}
+
+/* =========================================================
+   BOTTOM STICKY BAR: "TOTAL: S/. 2,500"
+   ========================================================= */
+
+.bottom-summary-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(11, 21, 40, 0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border-card);
+  padding: 8px 14px 18px 14px;
+  z-index: 30;
+  box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+}
+
+.total-summary-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #132442 0%, #1a3058 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.total-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.total-badge-label {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--white-pure);
+}
+
+.total-count-pill {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(0, 0, 0, 0.25);
+  padding: 2px 6px;
+  border-radius: var(--radius-full);
+}
+
+.total-right {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.total-currency {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-green-light);
+}
+
+.total-amount-value {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--white-pure);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.4px;
+}
+
+/* iOS Bottom Tab Bar */
+.ios-tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 6px;
+  padding-top: 4px;
+}
+
+.tab-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 9.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+}
+
+.tab-item svg {
+  width: 18px;
+  height: 18px;
+}
+
+.tab-item:hover,
+.tab-item.active {
+  color: var(--accent-blue);
+}
+
+/* =========================================================
+   DISTRIBUTION / CHART TAB VIEW
+   ========================================================= */
+
+.view-section {
+  display: none;
+}
+
+.view-section.active-view {
+  display: block;
+}
+
+.chart-card {
+  background: var(--bg-card-dark);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.chart-canvas-wrapper {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  margin: 8px auto;
+}
+
+.chart-center-info {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.chart-center-val {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--white-pure);
+}
+
+.chart-center-sub {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.chart-legend-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.legend-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+}
+
+.legend-color-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--white-soft);
+  margin-left: 6px;
+  flex: 1;
+}
+
+.legend-stat {
+  font-size: 12.5px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--white-pure);
+}
+
+/* =========================================================
+   MODAL DIALOGS & OVERLAYS
+   ========================================================= */
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.modal-backdrop.open {
+  display: flex;
+  opacity: 1;
+}
+
+.modal-sheet {
+  width: 100%;
+  background: #111e38;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px 24px 0 0;
+  padding: 16px 18px 28px 18px;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-sizing: border-box;
+}
+
+.modal-backdrop.open .modal-sheet {
+  transform: translateY(0);
+}
+
+.modal-drag-pill {
+  width: 36px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-full);
+  margin: 0 auto 12px auto;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white-pure);
+}
+
+.modal-close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-form-group {
+  margin-bottom: 12px;
+}
+
+.modal-label {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.modal-input {
+  width: 100%;
+  background: #091224;
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  padding: 9px 12px;
+  color: var(--white-pure);
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast);
+}
+
+.modal-input:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+
+.modal-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.btn-primary {
+  flex: 1;
+  background: var(--accent-blue-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--white-dim);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Toast Notifications */
+.toast-container {
+  position: absolute;
+  top: 52px;
+  left: 16px;
+  right: 16px;
+  z-index: 120;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 12px;
+  background: #1e3a68;
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  border-radius: var(--radius-md);
+  color: var(--white-pure);
+  font-size: 12px;
+  font-weight: 600;
+  box-shadow: var(--shadow-md);
+  transform: translateY(-20px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: auto;
+}
+
+.toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-btn-undo {
+  background: var(--accent-green);
+  color: #060b17;
+  border: none;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}

@@ -1,0 +1,23 @@
+{
+  "name": "personal-budget-app",
+  "version": "1.0.0",
+  "description": "Personal Budget Mobile & Laptop App with Express Backend and Evolution Analytics",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^4.22.3"
+  },
+  "keywords": [
+    "budget",
+    "finance",
+    "ios",
+    "express",
+    "charts"
+  ],
+  "author": "Antigravity",
+  "license": "MIT"
+}

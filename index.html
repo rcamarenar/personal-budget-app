@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Personal Budget App - iPhone & Laptop UI Design</title>
+  <meta name="description" content="Diseño de interfaz de usuario de presupuesto personal con backend en Express, gráficos de distribución y evolución de gastos evitables.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Application Stylesheets -->
+  <link rel="stylesheet" href="css/design-tokens.css">
+  <link rel="stylesheet" href="css/ios-frame.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<div class="workspace-container" id="mainWorkspace">
+
+  <!-- Top Prototype Control Bar (Compact, Organic & Responsive) -->
+  <header class="prototype-toolbar">
+    <div class="toolbar-brand">
+      <span class="dot-live"></span>
+      <span>Presupuesto Personal</span>
+    </div>
+
+    <!-- View Mode Switcher -->
+    <div class="toolbar-view-toggle">
+      <button class="toolbar-btn active" id="btnModeIphone" onclick="window.app.setViewMode('iphone')" title="Vista móvil iPhone 16 Pro">
+        📱 iPhone
+      </button>
+      <button class="toolbar-btn" id="btnModeLaptop" onclick="window.app.setViewMode('laptop')" title="Vista expandida de escritorio / Laptop">
+        💻 Laptop
+      </button>
+    </div>
+
+    <div class="toolbar-actions">
+      <select id="currencySelector" class="toolbar-select" title="Seleccionar moneda">
+        <option value="S/.">S/. Soles</option>
+        <option value="$">$ USD</option>
+        <option value="€">€ EUR</option>
+        <option value="MXN$">MXN$</option>
+      </select>
+      <button class="toolbar-btn" id="btnResetBudget" title="Restablecer presupuesto original">
+        ↺ Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- Device Stage Wrapper -->
+  <div class="device-stage">
+
+    <!-- iPhone / Laptop Responsive Frame -->
+    <div class="iphone-frame" id="deviceFrame">
+      <div class="iphone-screen">
+        <div class="screen-glare"></div>
+
+        <!-- Dynamic Island -->
+        <div class="dynamic-island">
+          <div class="sensor-dot"></div>
+          <div class="camera-lens"></div>
+        </div>
+
+        <!-- iOS Status Bar -->
+        <div class="ios-status-bar">
+          <div class="status-time" id="iosStatusTime">12:00</div>
+          <div class="status-icons">
+            <!-- Cellular Signal -->
+            <svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 18.25c-.2.2-.2.51 0 .71.1.1.23.15.35.15.13 0 .26-.05.35-.15l1.63-1.63C8.22 18.33 10.04 19 12 19c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 14.5c-3.03 0-5.5-2.47-5.5-5.5S8.97 6.5 12 6.5s5.5 2.47 5.5 5.5-2.47 5.5-5.5 5.5z"/></svg>
+            <!-- Wifi -->
+            <svg viewBox="0 0 24 24"><path d="M12 4C7.31 4 3.07 5.9 0 8.98L12 21 24 8.98A16.88 16.88 0 0 0 12 4zm0 3.5c3.55 0 6.77 1.34 9.24 3.53L12 19.34 2.76 11.03C5.23 8.84 8.45 7.5 12 7.5z"/></svg>
+            <!-- Battery -->
+            <svg viewBox="0 0 24 24"><rect x="2" y="7" width="18" height="10" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><rect x="4" y="9" width="13" height="6" rx="1.5" fill="currentColor"/><path d="M21 10h1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-1v-4z" fill="currentColor"/></svg>
+          </div>
+        </div>
+
+        <!-- App Header Bar -->
+        <div class="app-nav-bar">
+          <div class="app-title-group">
+            <span class="app-subtitle">Administración Financiera</span>
+            <h1 class="app-main-heading">Mi Presupuesto</h1>
+          </div>
+          <div class="app-nav-actions">
+            <button class="icon-btn-round" onclick="window.app.copyBudgetSummary()" title="Compartir / Copiar resumen">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" y1="2" x2="12" y2="15"></line></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Main Scrollable App Container -->
+        <div class="app-container">
+          <main class="app-content">
+
+            <!-- VIEW 1: Budget Management (Default) -->
+            <div class="view-section active-view" id="view-budget">
+              <!-- Salary Header Card Container -->
+              <div id="salaryHeaderContainer"></div>
+
+              <!-- Dynamic Category Sections Container -->
+              <div class="budget-sections-list" id="budgetSectionsContainer"></div>
+            </div>
+
+            <!-- VIEW 2: Charts & Distribution -->
+            <div class="view-section" id="view-charts">
+              <div class="chart-card animate-slide-up">
+                <h3 style="font-size: 15px; margin-bottom: 3px; color: var(--white-pure);">Distribución de Gastos</h3>
+                <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px;">Porcentaje asignado por categoría</p>
+                
+                <div class="chart-canvas-wrapper">
+                  <canvas id="budgetDonutCanvas"></canvas>
+                  <div class="chart-center-info">
+                    <div class="chart-center-val" id="chartCenterValue">S/. 2,500</div>
+                    <div class="chart-center-sub">Total Planificado</div>
+                  </div>
+                </div>
+
+                <div class="chart-legend-grid" id="chartStatsContainer"></div>
+              </div>
+            </div>
+
+            <!-- VIEW 3: Avoidable Expenses Evolution & Projection -->
+            <div class="view-section" id="view-avoidable">
+              <div class="chart-card animate-slide-up">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px;">
+                  <h3 style="font-size: 15px; margin: 0; color: var(--white-pure);">Gastos Evitables</h3>
+                  <span class="item-avoidable-pill">⚡ Reducibles</span>
+                </div>
+                <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 10px;">Evolución temporal y potencial de ahorro acumulado</p>
+
+                <!-- Metric Cards Row -->
+                <div class="avoidable-metrics-grid" id="avoidableStatsCards"></div>
+
+                <!-- Controls: Timeline & Mode -->
+                <div class="chart-controls-bar">
+                  <div class="pills-group">
+                    <button class="pill-btn" onclick="window.app.setAvoidableTimeframe(3, this)">3M</button>
+                    <button class="pill-btn" onclick="window.app.setAvoidableTimeframe(6, this)">6M</button>
+                    <button class="pill-btn active" onclick="window.app.setAvoidableTimeframe(12, this)">12M</button>
+                  </div>
+                  <div class="pills-group">
+                    <button class="pill-btn active" id="btnModeSavings" onclick="window.app.setAvoidableMode('savings', this)">📈 Ahorro</button>
+                    <button class="pill-btn" id="btnModeEvolution" onclick="window.app.setAvoidableMode('evolution', this)">📉 Gasto</button>
+                  </div>
+                </div>
+
+                <!-- Canvas Chart Container -->
+                <div class="avoidable-canvas-container">
+                  <canvas id="avoidableEvolutionCanvas"></canvas>
+                </div>
+
+                <!-- Breakdown of avoidable items -->
+                <div style="margin-top: 12px; text-align: left;">
+                  <div style="font-size: 12px; font-weight: 700; color: var(--white-dim); margin-bottom: 6px;">Gastos Prescindibles / Reducibles:</div>
+                  <div class="avoidable-items-list" id="avoidableItemsListContainer"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- VIEW 4: Summary & Notes -->
+            <div class="view-section" id="view-summary">
+              <div class="chart-card animate-slide-up">
+                <h3 style="font-size: 15px; margin-bottom: 6px; color: var(--white-pure);">Regla del Presupuesto</h3>
+                <p style="font-size: 12px; color: var(--text-dim); line-height: 1.5; margin-bottom: 12px;">
+                  Estructura balanceada basada en el plan mensual de <strong>S/. 2,500</strong>.
+                </p>
+
+                <div style="background: rgba(255,255,255,0.03); border-radius: var(--radius-md); padding: 12px; text-align: left; margin-bottom: 12px; border: 1px solid var(--border-subtle);">
+                  <div style="font-size: 12.5px; font-weight: 700; color: var(--cat-fijos); margin-bottom: 3px;">🏠 Gastos Fijos (40.8%)</div>
+                  <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Obligaciones fijas mensuales (Renta, Luz, Agua, Conectividad).</p>
+
+                  <div style="font-size: 12.5px; font-weight: 700; color: var(--cat-esenciales); margin-bottom: 3px;">🛒 Gastos Esenciales (25.2%)</div>
+                  <p style="font-size: 11.5px; color: var(--text-muted); margin-bottom: 8px;">Necesidades primarias variables (Alimentación, Transporte, Salud).</p>
+
+                  <div style="font-size: 12.5px; font-weight: 700; color: var(--cat-plan); margin-bottom: 3px;">📈 Planificación & Ahorro (34.0%)</div>
+                  <p style="font-size: 11.5px; color: var(--text-muted);">Construcción de patrimonio (Fondo de emergencia, Inversión, Ocio/imprevistos).</p>
+                </div>
+
+                <button class="btn-primary" style="width: 100%; margin-bottom: 8px;" onclick="window.app.copyBudgetSummary()">
+                  📋 Copiar Resumen Formateado
+                </button>
+              </div>
+            </div>
+
+          </main>
+
+          <!-- Fixed Bottom TOTAL Bar & Navigation Tabs -->
+          <footer class="bottom-summary-container">
+            <div id="bottomTotalContainer"></div>
+            
+            <nav class="ios-tab-bar" aria-label="Navegación principal">
+              <button class="tab-item active" id="tabBtn-budget" onclick="window.app.switchTab('budget')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+                <span>Presupuesto</span>
+              </button>
+
+              <button class="tab-item" id="tabBtn-charts" onclick="window.app.switchTab('charts')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                <span>Distribución</span>
+              </button>
+
+              <button class="tab-item" id="tabBtn-avoidable" onclick="window.app.switchTab('avoidable')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                <span>Evitables</span>
+              </button>
+
+              <button class="tab-item" id="tabBtn-summary" onclick="window.app.switchTab('summary')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                <span>Resumen</span>
+              </button>
+            </nav>
+          </footer>
+        </div>
+
+        <!-- iOS Home Bar Indicator -->
+        <div class="ios-home-bar-container">
+          <div class="ios-home-bar"></div>
+        </div>
+
+        <!-- Toast Notification Alert with Undo -->
+        <div class="toast-container">
+          <div class="toast" id="appToast">
+            <span id="toastText">Acción realizada</span>
+            <button class="toast-btn-undo" id="toastUndoBtn" onclick="window.app.undoLastDelete()">Deshacer</button>
+          </div>
+        </div>
+
+        <!-- MODAL 1: Edit Item -->
+        <div class="modal-backdrop" id="editItemModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <h2 class="modal-title" id="editItemModalTitle">Editar Gasto</h2>
+              <button class="modal-close-btn" onclick="window.app.closeModal('editItemModal')">✕</button>
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="editItemNameInput">Nombre del Gasto</label>
+              <input type="text" id="editItemNameInput" class="modal-input" placeholder="Ej. Inversión, Renta, Internet...">
+            </div>
+            <div class="modal-form-group">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <label class="modal-label" for="editItemAmountInput" style="margin-bottom:0;">Monto</label>
+                <label style="font-size: 11px; color: var(--accent-green-light); cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                  <input type="checkbox" id="editItemPercentCheckbox" style="accent-color: var(--accent-green);">
+                  % del Sueldo
+                </label>
+              </div>
+              <input type="number" step="any" id="editItemAmountInput" class="modal-input" placeholder="0.00">
+              
+              <div class="percent-helper-row" id="editPercentHelperRow" style="display: none; margin-top: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                  <input type="number" id="editItemPercentValue" class="modal-input" style="width: 75px; padding: 6px 10px;" placeholder="10" min="1" max="100">
+                  <span style="font-size: 12px; font-weight: 700; color: var(--accent-green-light);">% del Sueldo</span>
+                  <span style="font-size: 11px; color: var(--text-muted); margin-left: auto;" id="editPercentCalcPreview">= S/. 250</span>
+                </div>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('edit', 10)">10% Inversión</button>
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('edit', 15)">15%</button>
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('edit', 20)">20%</button>
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('edit', 50)">50%</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avoidable Flag Toggle -->
+            <div class="modal-form-group" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-md); padding: 8px 12px; margin-top: 8px;">
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 12px; font-weight: 600; color: #fca5a5;">
+                <span>⚡ Gasto Evitable / Reducible</span>
+                <input type="checkbox" id="editItemAvoidableCheckbox" style="accent-color: var(--accent-red); width: 16px; height: 16px;">
+              </label>
+            </div>
+
+            <div class="modal-btn-row">
+              <button class="btn-secondary" onclick="window.app.closeModal('editItemModal')">Cancelar</button>
+              <button class="btn-primary" onclick="window.app.saveEditItem()">Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL 2: Add New Item -->
+        <div class="modal-backdrop" id="addItemModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <h2 class="modal-title" id="addItemModalTitle">Agregar Gasto</h2>
+              <button class="modal-close-btn" onclick="window.app.closeModal('addItemModal')">✕</button>
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="addItemNameInput">Concepto / Nombre</label>
+              <input type="text" id="addItemNameInput" class="modal-input" placeholder="Ej. Inversión, Ahorro, Suscripción...">
+            </div>
+            <div class="modal-form-group">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 5px;">
+                <label class="modal-label" for="addItemAmountInput" style="margin-bottom:0;">Monto</label>
+                <label style="font-size: 11px; color: var(--accent-green-light); cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                  <input type="checkbox" id="addItemPercentCheckbox" style="accent-color: var(--accent-green);">
+                  % del Sueldo
+                </label>
+              </div>
+              <input type="number" step="any" id="addItemAmountInput" class="modal-input" placeholder="0.00">
+              
+              <div class="percent-helper-row" id="addPercentHelperRow" style="display: none; margin-top: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 6px;">
+                  <input type="number" id="addItemPercentValue" class="modal-input" style="width: 75px; padding: 6px 10px;" placeholder="10" min="1" max="100">
+                  <span style="font-size: 12px; font-weight: 700; color: var(--accent-green-light);">% del Sueldo</span>
+                  <span style="font-size: 11px; color: var(--text-muted); margin-left: auto;" id="addPercentCalcPreview">= S/. 250</span>
+                </div>
+                <div style="display: flex; gap: 4px; flex-wrap: wrap;">
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('add', 10)">10% Inversión</button>
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('add', 15)">15%</button>
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('add', 20)">20%</button>
+                  <button type="button" class="btn-chip" onclick="window.app.setModalPercent('add', 50)">50%</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avoidable Flag Toggle -->
+            <div class="modal-form-group" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-md); padding: 8px 12px; margin-top: 8px;">
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 12px; font-weight: 600; color: #fca5a5;">
+                <span>⚡ Marcar como Gasto Evitable / Reducible</span>
+                <input type="checkbox" id="addItemAvoidableCheckbox" style="accent-color: var(--accent-red); width: 16px; height: 16px;">
+              </label>
+            </div>
+
+            <div class="modal-btn-row">
+              <button class="btn-secondary" onclick="window.app.closeModal('addItemModal')">Cancelar</button>
+              <button class="btn-primary" onclick="window.app.saveAddItem()">Agregar Gasto</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL 3: Edit Category -->
+        <div class="modal-backdrop" id="editCategoryModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <h2 class="modal-title">Renombrar Categoría</h2>
+              <button class="modal-close-btn" onclick="window.app.closeModal('editCategoryModal')">✕</button>
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="editCategoryTitleInput">Título de la Categoría</label>
+              <input type="text" id="editCategoryTitleInput" class="modal-input" placeholder="GASTOS FIJOS...">
+            </div>
+            <div class="modal-btn-row">
+              <button class="btn-secondary" onclick="window.app.closeModal('editCategoryModal')">Cancelar</button>
+              <button class="btn-primary" onclick="window.app.saveEditCategory()">Guardar Título</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODAL 4: Add Category -->
+        <div class="modal-backdrop" id="addCategoryModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <h2 class="modal-title">Nueva Categoría</h2>
+              <button class="modal-close-btn" onclick="window.app.closeModal('addCategoryModal')">✕</button>
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="addCategoryTitleInput">Nombre de la Categoría</label>
+              <input type="text" id="addCategoryTitleInput" class="modal-input" placeholder="Ej. EDUCACIÓN / VIAJES">
+            </div>
+            <div class="modal-btn-row">
+              <button class="btn-secondary" onclick="window.app.closeModal('addCategoryModal')">Cancelar</button>
+              <button class="btn-primary" onclick="window.app.saveAddCategory()">Crear Categoría</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Application Scripts -->
+<script src="js/api.js"></script>
+<script src="js/state.js"></script>
+<script src="js/chart.js"></script>
+<script src="js/evolution-chart.js"></script>
+<script src="js/components.js"></script>
+<script src="js/app.js"></script>
+
+</body>
+</html>

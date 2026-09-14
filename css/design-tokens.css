@@ -1,0 +1,65 @@
+:root {
+  /* Dark Blue & White Theme Palette */
+  --bg-deep-space: #060b17;
+  --bg-app-dark: #0b1528;
+  --bg-card-dark: #13223f;
+  --bg-card-elevated: #1a2e54;
+  --bg-input-dark: #0d1a33;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-card: rgba(255, 255, 255, 0.12);
+  --border-focus: #3b82f6;
+
+  /* White & Light Accents */
+  --white-pure: #ffffff;
+  --white-soft: #f8fafc;
+  --white-dim: #e2e8f0;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  /* Small Red & Green Accents */
+  --accent-green: #10b981;
+  --accent-green-light: #34d399;
+  --accent-green-bg: rgba(16, 185, 129, 0.12);
+  --accent-green-border: rgba(16, 185, 129, 0.3);
+
+  --accent-red: #ef4444;
+  --accent-red-hover: #dc2626;
+  --accent-red-bg: rgba(239, 68, 68, 0.12);
+  --accent-red-border: rgba(239, 68, 68, 0.3);
+
+  /* Blue Highlights */
+  --accent-blue: #38bdf8;
+  --accent-blue-primary: #2563eb;
+  --accent-blue-bg: rgba(56, 189, 248, 0.12);
+  --accent-blue-border: rgba(56, 189, 248, 0.25);
+
+  /* Category Specific Colors */
+  --cat-fijos: #38bdf8;
+  --cat-fijos-bg: rgba(56, 189, 248, 0.12);
+  --cat-esenciales: #fbbf24;
+  --cat-esenciales-bg: rgba(251, 191, 36, 0.12);
+  --cat-plan: #10b981;
+  --cat-plan-bg: rgba(16, 185, 129, 0.12);
+
+  /* Fonts */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Consolas, monospace;
+
+  /* Shadows & Glassmorphism */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.5);
+  --shadow-glow-blue: 0 0 20px rgba(56, 189, 248, 0.2);
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.25);
+
+  /* Dimensions */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
