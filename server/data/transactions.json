@@ -1,9 +1,21 @@
 [
   {
+    "id": "tx-1789421316527",
+    "date": "2026-09-14T21:28:36.430Z",
+    "concept": "Compra Laptop",
+    "amount": 3700,
+    "categoryTitle": "GASTOS ESENCIALES",
+    "itemName": "Compra Laptop",
+    "paymentMethod": "Yape",
+    "isAvoidable": false,
+    "source": "manual",
+    "notes": ""
+  },
+  {
     "id": "tx-1789412562970",
     "date": "2026-09-14T19:02:42.970Z",
-    "concept": "Cine y combos   ocio",
-    "amount": 36,
+    "concept": "Almuerzo Ejecutivo Premium",
+    "amount": 32,
     "categoryTitle": "PLANIFICACIÓN",
     "itemName": "Cine y combos   ocio",
     "paymentMethod": "Plin",

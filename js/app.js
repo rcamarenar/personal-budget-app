@@ -505,6 +505,66 @@ class BudgetApp {
     this.showToast(`Gasto registrado: -${window.budgetStore.getState().currency} ${window.uiRenderers.formatMoney(amount)}`);
   }
 
+  openEditTxModal(txId) {
+    if (!window.txStore) return;
+    const tx = window.txStore.transactions.find(t => t.id === txId);
+    if (!tx) return;
+
+    const idHidden = document.getElementById('editTxIdHidden');
+    const conceptInput = document.getElementById('editTxConceptInput');
+    const amountInput = document.getElementById('editTxAmountInput');
+    const catSelect = document.getElementById('editTxCategorySelect');
+    const paymentSelect = document.getElementById('editTxPaymentSelect');
+    const avoidableCheckbox = document.getElementById('editTxAvoidableCheckbox');
+
+    if (idHidden) idHidden.value = tx.id;
+    if (conceptInput) conceptInput.value = tx.concept;
+    if (amountInput) amountInput.value = tx.amount;
+    if (catSelect) catSelect.value = tx.categoryTitle || 'GASTOS ESENCIALES';
+    if (paymentSelect) paymentSelect.value = tx.paymentMethod || 'Yape';
+    if (avoidableCheckbox) avoidableCheckbox.checked = !!tx.isAvoidable;
+
+    this.openModal('editTxModal');
+    setTimeout(() => {
+      if (conceptInput) {
+        conceptInput.focus();
+        conceptInput.select();
+      }
+    }, 150);
+  }
+
+  async saveEditTransaction() {
+    const txId = document.getElementById('editTxIdHidden')?.value;
+    const concept = (document.getElementById('editTxConceptInput')?.value || '').trim();
+    const amount = parseFloat(document.getElementById('editTxAmountInput')?.value) || 0;
+    const categoryTitle = document.getElementById('editTxCategorySelect')?.value || 'GASTOS ESENCIALES';
+    const paymentMethod = document.getElementById('editTxPaymentSelect')?.value || 'Yape';
+    const isAvoidable = !!document.getElementById('editTxAvoidableCheckbox')?.checked;
+
+    if (!txId) return;
+    if (!concept) {
+      alert('Por favor, ingresa el concepto del gasto.');
+      return;
+    }
+    if (amount <= 0) {
+      alert('Por favor, ingresa un monto válido mayor a cero.');
+      return;
+    }
+
+    if (window.txStore) {
+      await window.txStore.updateTransaction(txId, {
+        concept,
+        amount,
+        categoryTitle,
+        paymentMethod,
+        isAvoidable
+      });
+    }
+
+    this.closeModal('editTxModal');
+    this.showToast(`Gasto actualizado: -${window.budgetStore.getState().currency} ${window.uiRenderers.formatMoney(amount)}`);
+  }
+
   async handleDeleteTx(txId) {
     if (confirm('¿Deseas eliminar este registro del historial?')) {
       if (window.txStore) {

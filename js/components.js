@@ -377,15 +377,63 @@ function renderSummaryTab(state) {
 }
 
 // Render the Historical Daily & Monthly Transactions Ledger
+// Render the Historical Daily & Monthly Transactions Ledger
 function renderHistoryTab(budgetState, txState) {
   const container = document.getElementById('historyViewContainer');
   if (!container) return;
 
   const currency = budgetState.currency || 'S/.';
+  const salary = Number(budgetState.salary) || 0;
   const totalSpent = txState ? txState.totalSpent : 0;
   const avoidableSpent = txState ? txState.avoidableSpent : 0;
   const count = txState ? txState.totalCount : 0;
   const groupedDays = txState ? txState.groupedDays : [];
+
+  const spentPercent = salary > 0 ? (totalSpent / salary) * 100 : 0;
+  const remaining = salary - totalSpent;
+  const isNearLimit = spentPercent >= 80 && spentPercent < 100;
+  const isExceeded = spentPercent >= 100;
+
+  // Alert Banner Card
+  let alertBannerHtml = '';
+  if (isExceeded) {
+    alertBannerHtml = `
+      <div class="budget-alert-card alert-danger animate-pulse-border">
+        <div class="alert-icon">🚨</div>
+        <div class="alert-content">
+          <div class="alert-title">¡Presupuesto Mensual Excedido!</div>
+          <div class="alert-desc">
+            Has consumido <strong>${currency} ${formatMoney(totalSpent)}</strong> (${Math.round(spentPercent)}%), superando tu presupuesto por <strong style="color: #fca5a5;">${currency} ${formatMoney(Math.abs(remaining))}</strong>.
+            ${avoidableSpent > 0 ? `<div style="margin-top: 4px; font-size: 11px; opacity: 0.95;">💡 Tip: Tienes <strong>${currency} ${formatMoney(avoidableSpent)}</strong> en gastos evitables que puedes recortar.</div>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (isNearLimit) {
+    alertBannerHtml = `
+      <div class="budget-alert-card alert-warning animate-pulse-border">
+        <div class="alert-icon">⚠️</div>
+        <div class="alert-content">
+          <div class="alert-title">¡Atención! Presupuesto al ${Math.round(spentPercent)}%</div>
+          <div class="alert-desc">
+            Has consumido <strong>${currency} ${formatMoney(totalSpent)}</strong> de tu límite mensual. Te quedan <strong style="color: #fef08a;">${currency} ${formatMoney(remaining)}</strong> disponibles.
+          </div>
+        </div>
+      </div>
+    `;
+  } else if (salary > 0 && totalSpent > 0) {
+    alertBannerHtml = `
+      <div class="budget-alert-card alert-safe">
+        <div class="alert-icon">🟢</div>
+        <div class="alert-content">
+          <div class="alert-title">Presupuesto en Rango Saludable</div>
+          <div class="alert-desc">
+            Has consumido el <strong>${Math.round(spentPercent)}%</strong> (${currency} ${formatMoney(totalSpent)}). Saldo disponible: <strong style="color: var(--accent-green-light);">${currency} ${formatMoney(remaining)}</strong>.
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
   let daysHtml = '';
   if (groupedDays.length === 0) {
@@ -410,10 +458,10 @@ function renderHistoryTab(budgetState, txState) {
           : '';
 
         itemsHtml += `
-          <div class="tx-card-row">
+          <div class="tx-card-row" id="tx-row-${tx.id}">
             <div class="tx-left">
               <div class="tx-concept-line">
-                <span class="tx-concept-text">${tx.concept}</span>
+                <span class="tx-concept-text" onclick="window.app.openEditTxModal('${tx.id}')" title="Clic para editar">${tx.concept}</span>
                 ${avoidableTag}
               </div>
               <div class="tx-meta-line">
@@ -423,9 +471,14 @@ function renderHistoryTab(budgetState, txState) {
             </div>
             <div class="tx-right">
               <span class="tx-amount-text">-${currency} ${formatMoney(tx.amount)}</span>
-              <button class="tx-delete-btn" onclick="window.app.handleDeleteTx('${tx.id}')" title="Eliminar registro">
-                ✕
-              </button>
+              <div class="tx-action-buttons">
+                <button class="tx-btn-action tx-btn-edit" onclick="window.app.openEditTxModal('${tx.id}')" title="Editar gasto">
+                  ${Icons.pen}
+                </button>
+                <button class="tx-btn-action tx-btn-delete" onclick="window.app.handleDeleteTx('${tx.id}')" title="Eliminar registro">
+                  ${Icons.trash}
+                </button>
+              </div>
             </div>
           </div>
         `;
@@ -462,17 +515,31 @@ function renderHistoryTab(budgetState, txState) {
       </button>
     </div>
 
+    <!-- Alert Banner (Overrun / Warning) -->
+    ${alertBannerHtml}
+
     <!-- History Summary Metrics -->
     <div class="history-summary-cards">
       <div class="history-metric-card">
         <div class="metric-title">Gasto Real Registrado</div>
-        <div class="metric-value text-red">${currency} ${formatMoney(totalSpent)}</div>
+        <div class="metric-value ${isExceeded ? 'text-red' : isNearLimit ? 'text-amber' : 'text-green'}">${currency} ${formatMoney(totalSpent)}</div>
         <div class="metric-detail">${count} consumos este mes</div>
       </div>
       <div class="history-metric-card">
         <div class="metric-title">Presupuesto Mensual</div>
-        <div class="metric-value text-blue">${currency} ${formatMoney(budgetState.salary)}</div>
-        <div class="metric-detail">Planificado a administrar</div>
+        <div class="metric-value text-blue">${currency} ${formatMoney(salary)}</div>
+        <div class="metric-detail">${remaining >= 0 ? `Restante: ${currency} ${formatMoney(remaining)}` : `Excedido: ${currency} ${formatMoney(Math.abs(remaining))}`}</div>
+      </div>
+    </div>
+
+    <!-- Monthly Budget Progress Bar -->
+    <div class="history-budget-progress-box">
+      <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 5px; color: var(--text-dim); font-weight: 600;">
+        <span>Consumido: <strong style="color: ${isExceeded ? 'var(--accent-red)' : isNearLimit ? '#f59e0b' : 'var(--accent-green-light)'};">${Math.round(spentPercent)}%</strong></span>
+        <span>Límite: ${currency} ${formatMoney(salary)}</span>
+      </div>
+      <div class="history-progress-track">
+        <div class="history-progress-fill ${isExceeded ? 'progress-exceeded' : isNearLimit ? 'progress-warning' : 'progress-safe'}" style="width: ${Math.min(spentPercent, 100)}%;"></div>
       </div>
     </div>
 

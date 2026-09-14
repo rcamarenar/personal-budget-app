@@ -183,6 +183,21 @@ const BudgetAPI = {
     }
   },
 
+  async updateTransaction(txId, txData) {
+    try {
+      const res = await fetch(`${API_BASE}/transactions/${txId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(txData)
+      });
+      const json = await res.json();
+      return json.data;
+    } catch (err) {
+      console.warn('API error updateTransaction', err);
+      return null;
+    }
+  },
+
   async deleteTransaction(txId) {
     try {
       const res = await fetch(`${API_BASE}/transactions/${txId}`, {

@@ -1486,3 +1486,176 @@
   border-radius: var(--radius-sm);
   cursor: pointer;
 }
+
+/* =========================================================
+   Budget Overrun Alert Banners & Progress Meter
+   ========================================================= */
+
+.budget-alert-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  font-size: 12px;
+  line-height: 1.4;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.budget-alert-card .alert-icon {
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.budget-alert-card .alert-content {
+  flex: 1;
+  text-align: left;
+}
+
+.budget-alert-card .alert-title {
+  font-weight: 700;
+  font-size: 12.5px;
+  margin-bottom: 2px;
+}
+
+.budget-alert-card .alert-desc {
+  color: var(--white-dim);
+  font-size: 11.5px;
+}
+
+/* Alert Variants */
+.budget-alert-card.alert-danger {
+  background: rgba(239, 68, 68, 0.16);
+  border: 1px solid rgba(239, 68, 68, 0.55);
+  color: #fca5a5;
+}
+
+.budget-alert-card.alert-danger .alert-title {
+  color: #f87171;
+}
+
+.budget-alert-card.alert-warning {
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.55);
+  color: #fef08a;
+}
+
+.budget-alert-card.alert-warning .alert-title {
+  color: #fbbf24;
+}
+
+.budget-alert-card.alert-safe {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #a7f3d0;
+}
+
+.budget-alert-card.alert-safe .alert-title {
+  color: #34d399;
+}
+
+@keyframes pulse-border-red {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4), 0 4px 12px rgba(0,0,0,0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15), 0 4px 18px rgba(239, 68, 68, 0.35);
+  }
+}
+
+.animate-pulse-border {
+  animation: pulse-border-red 2s infinite ease-in-out;
+}
+
+/* History Monthly Progress Bar */
+.history-budget-progress-box {
+  background: rgba(0, 0, 0, 0.22);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  margin-bottom: 12px;
+}
+
+.history-progress-track {
+  width: 100%;
+  height: 7px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.history-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.4s ease-in-out, background-color 0.3s ease;
+}
+
+.history-progress-fill.progress-safe {
+  background: linear-gradient(90deg, #10b981, #34d399);
+}
+
+.history-progress-fill.progress-warning {
+  background: linear-gradient(90deg, #f59e0b, #fbbf24);
+}
+
+.history-progress-fill.progress-exceeded {
+  background: linear-gradient(90deg, #ef4444, #f87171);
+}
+
+/* Text status helpers */
+.text-amber {
+  color: #f59e0b !important;
+}
+
+.text-green {
+  color: var(--accent-green-light) !important;
+}
+
+/* Transaction Row Action Buttons (Pen & Trash) */
+.tx-action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tx-btn-action {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.tx-btn-action svg {
+  width: 13px;
+  height: 13px;
+}
+
+.tx-btn-edit {
+  color: var(--accent-blue-light);
+}
+
+.tx-btn-edit:hover {
+  background: rgba(56, 189, 248, 0.15);
+  transform: scale(1.1);
+}
+
+.tx-btn-delete {
+  color: rgba(239, 68, 68, 0.7);
+}
+
+.tx-btn-delete:hover {
+  color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.15);
+  transform: scale(1.1);
+}
+

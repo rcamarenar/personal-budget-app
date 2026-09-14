@@ -87,6 +87,22 @@ class TransactionsManager {
     return newTx;
   }
 
+  async updateTransaction(txId, updatedData) {
+    const idx = this.transactions.findIndex(t => t.id === txId);
+    if (idx !== -1) {
+      this.transactions[idx] = {
+        ...this.transactions[idx],
+        ...updatedData,
+        amount: Math.max(0, parseFloat(updatedData.amount !== undefined ? updatedData.amount : this.transactions[idx].amount) || 0)
+      };
+      this.notify();
+
+      if (window.BudgetAPI) {
+        await window.BudgetAPI.updateTransaction(txId, this.transactions[idx]);
+      }
+    }
+  }
+
   async deleteTransaction(txId) {
     this.transactions = this.transactions.filter(t => t.id !== txId);
     this.notify();

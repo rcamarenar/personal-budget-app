@@ -409,6 +409,57 @@
           </div>
         </div>
 
+        <!-- MODAL 5B: Edit Daily Transaction (Historial) -->
+        <div class="modal-backdrop" id="editTxModal">
+          <div class="modal-sheet">
+            <div class="modal-drag-pill"></div>
+            <div class="modal-header">
+              <h2 class="modal-title">Editar Gasto Registrado</h2>
+              <button class="modal-close-btn" onclick="window.app.closeModal('editTxModal')">✕</button>
+            </div>
+            <input type="hidden" id="editTxIdHidden">
+            <div class="modal-form-group">
+              <label class="modal-label" for="editTxConceptInput">Concepto / Descripción</label>
+              <input type="text" id="editTxConceptInput" class="modal-input" placeholder="Ej. Almuerzo menú, Gasolina, Farmacia...">
+            </div>
+            <div class="modal-form-group">
+              <label class="modal-label" for="editTxAmountInput">Monto</label>
+              <input type="number" step="any" id="editTxAmountInput" class="modal-input" placeholder="0.00">
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <div class="modal-form-group">
+                <label class="modal-label" for="editTxCategorySelect">Categoría</label>
+                <select id="editTxCategorySelect" class="modal-input" style="padding: 9px 8px;">
+                  <option value="GASTOS ESENCIALES">Gastos Esenciales</option>
+                  <option value="GASTOS FIJOS">Gastos Fijos</option>
+                  <option value="PLANIFICACIÓN">Planificación / Ocio</option>
+                </select>
+              </div>
+              <div class="modal-form-group">
+                <label class="modal-label" for="editTxPaymentSelect">Método de Pago</label>
+                <select id="editTxPaymentSelect" class="modal-input" style="padding: 9px 8px;">
+                  <option value="Yape">💜 Yape</option>
+                  <option value="Plin">💙 Plin</option>
+                  <option value="Tarjeta">💳 Tarjeta</option>
+                  <option value="Efectivo">💵 Efectivo</option>
+                  <option value="Transferencia">🏦 Transferencia</option>
+                  <option value="WhatsApp">💬 WhatsApp</option>
+                </select>
+              </div>
+            </div>
+            <div class="modal-form-group" style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.25); border-radius: var(--radius-md); padding: 8px 12px; margin-top: 4px;">
+              <label style="display: flex; align-items: center; justify-content: space-between; cursor: pointer; font-size: 12px; font-weight: 600; color: #fca5a5;">
+                <span>⚡ Es un Gasto Evitable / Prescindible</span>
+                <input type="checkbox" id="editTxAvoidableCheckbox" style="accent-color: var(--accent-red); width: 16px; height: 16px;">
+              </label>
+            </div>
+            <div class="modal-btn-row">
+              <button class="btn-secondary" onclick="window.app.closeModal('editTxModal')">Cancelar</button>
+              <button class="btn-primary" onclick="window.app.saveEditTransaction()">Guardar Cambios</button>
+            </div>
+          </div>
+        </div>
+
         <!-- MODAL 6: Receipt & Screenshot OCR Scanner -->
         <div class="modal-backdrop" id="receiptScannerModal">
           <div class="modal-sheet">

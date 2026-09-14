@@ -481,7 +481,36 @@ app.post('/api/transactions', (req, res) => {
   res.status(201).json({ success: true, data: newTx, message: 'Transaction recorded' });
 });
 
-// 3. DELETE /api/transactions/:id - Delete transaction
+// 3. PUT /api/transactions/:id - Update transaction
+app.put('/api/transactions/:id', (req, res) => {
+  const txId = req.params.id;
+  const { concept, amount, categoryTitle, itemName, paymentMethod, isAvoidable, notes, date } = req.body;
+
+  let txs = readTransactions();
+  const txIndex = txs.findIndex(t => t.id === txId);
+
+  if (txIndex === -1) {
+    return res.status(404).json({ success: false, message: 'Transaction not found' });
+  }
+
+  const existing = txs[txIndex];
+  txs[txIndex] = {
+    ...existing,
+    concept: concept !== undefined ? concept.trim() : existing.concept,
+    amount: amount !== undefined ? Math.max(0, parseFloat(amount) || 0) : existing.amount,
+    categoryTitle: categoryTitle !== undefined ? categoryTitle : existing.categoryTitle,
+    itemName: itemName !== undefined ? itemName.trim() : (concept ? concept.trim() : existing.itemName),
+    paymentMethod: paymentMethod !== undefined ? paymentMethod : existing.paymentMethod,
+    isAvoidable: isAvoidable !== undefined ? !!isAvoidable : existing.isAvoidable,
+    notes: notes !== undefined ? notes : existing.notes,
+    date: date !== undefined ? new Date(date).toISOString() : existing.date
+  };
+
+  writeTransactions(txs);
+  res.json({ success: true, data: txs[txIndex], message: 'Transaction updated successfully' });
+});
+
+// 4. DELETE /api/transactions/:id - Delete transaction
 app.delete('/api/transactions/:id', (req, res) => {
   const txId = req.params.id;
   let txs = readTransactions();
