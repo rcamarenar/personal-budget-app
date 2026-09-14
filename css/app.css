@@ -657,8 +657,6 @@
 
 .history-quick-actions {
   display: grid;
-.history-quick-actions {
-  display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 5px;
   margin-bottom: 12px;
