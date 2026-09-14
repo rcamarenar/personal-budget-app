@@ -657,8 +657,10 @@
 
 .history-quick-actions {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
+.history-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 5px;
   margin-bottom: 12px;
 }
 
@@ -667,16 +669,17 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 10px 6px;
+  gap: 3px;
+  padding: 8px 3px;
   background: linear-gradient(135deg, rgba(37, 99, 235, 0.15) 0%, rgba(30, 58, 102, 0.25) 100%);
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: var(--radius-md);
   color: var(--white-pure);
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
   cursor: pointer;
   transition: all var(--transition-fast);
+  touch-action: manipulation;
 }
 
 .btn-action-tile:hover {
@@ -687,7 +690,11 @@
 }
 
 .btn-action-tile .tile-icon {
-  font-size: 18px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
 .btn-action-tile.tile-scanner {
@@ -710,6 +717,19 @@
   background: linear-gradient(135deg, rgba(34, 197, 94, 0.3) 0%, rgba(74, 222, 128, 0.3) 100%);
   border-color: #22c55e;
   box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+}
+
+.btn-action-tile.tile-clear {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(127, 29, 29, 0.25) 100%);
+  border-color: rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+}
+
+.btn-action-tile.tile-clear:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(248, 113, 113, 0.3) 100%);
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+  color: var(--white-pure);
 }
 
 /* History Summary Cards */
@@ -1312,20 +1332,22 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  display: none;
+  display: none !important;
   align-items: flex-end;
   justify-content: center;
   z-index: 100;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.25s ease;
 }
 
 .modal-backdrop.open {
-  display: flex;
-  opacity: 1;
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .modal-sheet {
@@ -1620,22 +1642,32 @@
 .tx-action-buttons {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  position: relative;
+  z-index: 5;
 }
 
 .tx-btn-action {
-  background: transparent;
-  border: none;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
-  padding: 4px;
+  padding: 0;
+  width: 28px;
+  height: 28px;
   border-radius: var(--radius-sm);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all var(--transition-fast);
+  touch-action: manipulation;
+  user-select: none;
 }
 
-.tx-btn-action svg {
+.tx-btn-action svg,
+.tx-btn-action svg path,
+.tx-btn-action svg line,
+.tx-btn-action svg polyline {
+  pointer-events: none;
   width: 13px;
   height: 13px;
 }
@@ -1644,18 +1676,22 @@
   color: var(--accent-blue-light);
 }
 
-.tx-btn-edit:hover {
-  background: rgba(56, 189, 248, 0.15);
+.tx-btn-edit:hover,
+.tx-btn-edit:active {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: var(--accent-blue);
   transform: scale(1.1);
 }
 
 .tx-btn-delete {
-  color: rgba(239, 68, 68, 0.7);
+  color: #f87171;
 }
 
-.tx-btn-delete:hover {
-  color: var(--accent-red);
-  background: rgba(239, 68, 68, 0.15);
+.tx-btn-delete:hover,
+.tx-btn-delete:active {
+  color: #ffffff;
+  background: rgba(239, 68, 68, 0.35);
+  border-color: var(--accent-red);
   transform: scale(1.1);
 }
 

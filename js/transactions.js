@@ -59,8 +59,18 @@ class TransactionsManager {
       const res = await window.BudgetAPI.getTransactions();
       if (res && res.transactions) {
         this.transactions = res.transactions;
+        localStorage.setItem('budget_transactions_cache', JSON.stringify(this.transactions));
         this.notify();
+        return;
       }
+    }
+    // Fallback to cache if API unreachable
+    const cached = localStorage.getItem('budget_transactions_cache');
+    if (cached) {
+      try {
+        this.transactions = JSON.parse(cached);
+        this.notify();
+      } catch (e) {}
     }
   }
 
@@ -79,6 +89,7 @@ class TransactionsManager {
     };
 
     this.transactions.unshift(newTx);
+    localStorage.setItem('budget_transactions_cache', JSON.stringify(this.transactions));
     this.notify();
 
     if (window.BudgetAPI) {
@@ -88,13 +99,14 @@ class TransactionsManager {
   }
 
   async updateTransaction(txId, updatedData) {
-    const idx = this.transactions.findIndex(t => t.id === txId);
+    const idx = this.transactions.findIndex(t => String(t.id) === String(txId));
     if (idx !== -1) {
       this.transactions[idx] = {
         ...this.transactions[idx],
         ...updatedData,
         amount: Math.max(0, parseFloat(updatedData.amount !== undefined ? updatedData.amount : this.transactions[idx].amount) || 0)
       };
+      localStorage.setItem('budget_transactions_cache', JSON.stringify(this.transactions));
       this.notify();
 
       if (window.BudgetAPI) {
@@ -104,11 +116,22 @@ class TransactionsManager {
   }
 
   async deleteTransaction(txId) {
-    this.transactions = this.transactions.filter(t => t.id !== txId);
+    this.transactions = this.transactions.filter(t => String(t.id) !== String(txId));
+    localStorage.setItem('budget_transactions_cache', JSON.stringify(this.transactions));
     this.notify();
 
     if (window.BudgetAPI) {
       await window.BudgetAPI.deleteTransaction(txId);
+    }
+  }
+
+  async clearAllTransactions() {
+    this.transactions = [];
+    localStorage.setItem('budget_transactions_cache', JSON.stringify([]));
+    this.notify();
+
+    if (window.BudgetAPI) {
+      await window.BudgetAPI.clearAllTransactions();
     }
   }
 }

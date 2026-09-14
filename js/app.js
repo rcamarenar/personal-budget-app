@@ -507,8 +507,11 @@ class BudgetApp {
 
   openEditTxModal(txId) {
     if (!window.txStore) return;
-    const tx = window.txStore.transactions.find(t => t.id === txId);
-    if (!tx) return;
+    const tx = window.txStore.transactions.find(t => String(t.id) === String(txId));
+    if (!tx) {
+      console.warn('Transaction not found with ID:', txId);
+      return;
+    }
 
     const idHidden = document.getElementById('editTxIdHidden');
     const conceptInput = document.getElementById('editTxConceptInput');
@@ -571,6 +574,15 @@ class BudgetApp {
         await window.txStore.deleteTransaction(txId);
       }
       this.showToast('Gasto eliminado del historial');
+    }
+  }
+
+  async handleClearAllTransactions() {
+    if (confirm('¿Deseas vaciar todo el historial y reiniciar los gastos registrados a cero (S/. 0.00)?')) {
+      if (window.txStore) {
+        await window.txStore.clearAllTransactions();
+      }
+      this.showToast('Historial vaciado a S/. 0.00');
     }
   }
 

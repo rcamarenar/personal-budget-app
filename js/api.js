@@ -211,6 +211,19 @@ const BudgetAPI = {
     }
   },
 
+  async clearAllTransactions() {
+    try {
+      const res = await fetch(`${API_BASE}/transactions/clear`, {
+        method: 'POST'
+      });
+      const json = await res.json();
+      return json;
+    } catch (err) {
+      console.warn('API error clearAllTransactions', err);
+      return null;
+    }
+  },
+
   // Scan Receipt / Screenshot OCR
   async scanReceipt(payload) {
     try {

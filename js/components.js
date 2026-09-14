@@ -472,10 +472,10 @@ function renderHistoryTab(budgetState, txState) {
             <div class="tx-right">
               <span class="tx-amount-text">-${currency} ${formatMoney(tx.amount)}</span>
               <div class="tx-action-buttons">
-                <button class="tx-btn-action tx-btn-edit" onclick="window.app.openEditTxModal('${tx.id}')" title="Editar gasto">
+                <button type="button" class="tx-btn-action tx-btn-edit" onclick="event.stopPropagation(); window.app.openEditTxModal('${tx.id}')" title="Editar gasto">
                   ${Icons.pen}
                 </button>
-                <button class="tx-btn-action tx-btn-delete" onclick="window.app.handleDeleteTx('${tx.id}')" title="Eliminar registro">
+                <button type="button" class="tx-btn-action tx-btn-delete" onclick="event.stopPropagation(); window.app.handleDeleteTx('${tx.id}')" title="Eliminar registro">
                   ${Icons.trash}
                 </button>
               </div>
@@ -512,6 +512,10 @@ function renderHistoryTab(budgetState, txState) {
       <button class="btn-action-tile tile-whatsapp" onclick="window.app.openWhatsAppAssistantModal()">
         <span class="tile-icon">💬</span>
         <span>WhatsApp</span>
+      </button>
+      <button class="btn-action-tile tile-clear" onclick="window.app.handleClearAllTransactions()" title="Vaciar historial a cero">
+        <span class="tile-icon">${Icons.trash}</span>
+        <span>Vaciar a 0</span>
       </button>
     </div>
 

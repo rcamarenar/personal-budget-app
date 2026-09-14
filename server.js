@@ -510,12 +510,12 @@ app.put('/api/transactions/:id', (req, res) => {
   res.json({ success: true, data: txs[txIndex], message: 'Transaction updated successfully' });
 });
 
-// 4. DELETE /api/transactions/:id - Delete transaction
+// 4. DELETE /api/transactions/:id - Delete single transaction
 app.delete('/api/transactions/:id', (req, res) => {
   const txId = req.params.id;
   let txs = readTransactions();
   const initialCount = txs.length;
-  txs = txs.filter(t => t.id !== txId);
+  txs = txs.filter(t => String(t.id) !== String(txId));
 
   if (txs.length === initialCount) {
     return res.status(404).json({ success: false, message: 'Transaction not found' });
@@ -523,6 +523,17 @@ app.delete('/api/transactions/:id', (req, res) => {
 
   writeTransactions(txs);
   res.json({ success: true, message: 'Transaction deleted' });
+});
+
+// 5. POST /api/transactions/clear - Clear all transactions to zero (Production reset)
+app.post('/api/transactions/clear', (req, res) => {
+  writeTransactions([]);
+  res.json({ success: true, message: 'All transactions cleared to zero', count: 0 });
+});
+
+app.delete('/api/transactions', (req, res) => {
+  writeTransactions([]);
+  res.json({ success: true, message: 'All transactions cleared to zero', count: 0 });
 });
 
 /* =========================================================
